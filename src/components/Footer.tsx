@@ -9,7 +9,7 @@ export function Footer() {
     <footer className="on-dark bg-ink text-lemon">
       <div className="container grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4">
-          <Logo className="text-lemon" />
+          <Logo dark className="text-lemon" />
           <p className="max-w-xs text-lemon/80">{site.tagline}. AI agency in Bengaluru building websites, apps and automation systems.</p>
           <ul className="space-y-2 text-sm text-lemon/80">
             <li className="flex gap-2"><MapPin aria-hidden className="h-4 w-4 shrink-0 translate-y-1" />Bengaluru, Karnataka, India</li>

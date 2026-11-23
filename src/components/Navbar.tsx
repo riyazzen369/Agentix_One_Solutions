@@ -6,14 +6,18 @@ import { Menu, X, ArrowRight } from "lucide-react";
 import { nav, site, whatsappHref } from "@/content/site";
 import { buttonClass } from "./Button";
 import { LeadButton } from "./LeadModal";
+import { LogoMark } from "./LogoMark";
 import { cn } from "@/lib/cn";
 
-export function Logo({ className }: { className?: string }) {
+export function Logo({ className, dark }: { className?: string; dark?: boolean }) {
   return (
-    <Link href="/" className={cn("flex min-h-[44px] items-center gap-2.5 font-display font-bold uppercase leading-none tracking-tight", className)} aria-label={`${site.name} — home`}>
-      <span aria-hidden className="grid h-9 w-9 place-items-center rounded-lg border-2 border-current bg-lavender text-ink text-sm">A1</span>
-      <span className="text-[15px] sm:text-base">
-        Agentix One<span className="block text-[11px] tracking-[0.2em]">Solution</span>
+    <Link href="/" className={cn("flex min-h-[44px] items-center gap-3 font-display font-bold uppercase leading-none", className)} aria-label={`${site.name} — home`}>
+      <span aria-hidden className={cn("grid h-11 w-11 shrink-0 place-items-center rounded-xl border-2 border-current bg-[#0B0B10]", dark ? "" : "shadow-brut-sm")}>
+        <LogoMark className="h-8 w-8" />
+      </span>
+      <span className="flex flex-col gap-1">
+        <span className="text-[17px] tracking-[0.14em] sm:text-lg">Agentix</span>
+        <span className={cn("text-[9px] font-semibold tracking-[0.34em] sm:text-[10px]", dark && "text-lavender")}>One Solution</span>
       </span>
     </Link>
   );
@@ -79,7 +83,7 @@ export function Navbar() {
       >
         <div className="container flex h-full flex-col py-4">
           <div className="flex h-14 items-center justify-between">
-            <Logo className="text-lemon" />
+            <Logo dark className="text-lemon" />
             <button type="button" onClick={() => setOpen(false)} aria-label="Close menu" className="grid h-12 w-12 place-items-center rounded-xl border-2 border-lemon hover:border-mint hover:text-mint">
               <X aria-hidden className="h-6 w-6" />
             </button>
