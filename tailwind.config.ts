@@ -12,6 +12,7 @@ const config: Config = {
         alabaster: "#F8F8F4",
         slate: "#6B6B76",
         mint: "#00E5A8",
+        neon: "#2FD8FF",
       },
       fontFamily: {
         display: ['"Space Grotesk Variable"', "system-ui", "sans-serif"],
