@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Clock, Mail, MapPin, MessageCircle } from "lucide-react";
-import { services, site, whatsappHref } from "@/content/site";
+import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { phoneDisplay, phoneHref, services, site, whatsappHref } from "@/content/site";
 import { pageMeta, contactLd } from "@/lib/seo";
 import { PageHeader } from "@/components/PageHeader";
 import { ContactForm } from "@/components/ContactForm";
@@ -37,6 +37,7 @@ export default function ContactPage() {
             </div>
             <ul className="mt-6 space-y-3 border-t-2 border-ink pt-5 text-[15px]">
               <li className="flex gap-3"><MapPin aria-hidden className="h-5 w-5 shrink-0" />Bengaluru, Karnataka, India</li>
+              {phoneDisplay && <li className="flex gap-3"><Phone aria-hidden className="h-5 w-5 shrink-0" /><a className="link-u" href={phoneHref}>{phoneDisplay}</a></li>}
               <li className="flex gap-3"><Clock aria-hidden className="h-5 w-5 shrink-0" />{site.contact.hours}</li>
             </ul>
             <h3 className="eyebrow mt-6">Social</h3>

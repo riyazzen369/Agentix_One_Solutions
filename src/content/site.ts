@@ -27,6 +27,13 @@ export const site = {
   effectiveDate: "[PLACEHOLDER: Effective date]",
 };
 
+export const phoneDisplay = (() => {
+  const n = site.contact.whatsapp.replace(/\D/g, "");
+  if (n.length === 12 && n.startsWith("91")) return `+91 ${n.slice(2, 7)} ${n.slice(7)}`;
+  return n ? `+${n}` : "";
+})();
+export const phoneHref = site.contact.whatsapp ? `tel:+${site.contact.whatsapp.replace(/\D/g, "")}` : "";
+
 export const whatsappHref = (text = "Hi Agentix One Solution, I'd like a free AI growth plan.") =>
   site.contact.whatsapp
     ? `https://wa.me/${site.contact.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(text)}`

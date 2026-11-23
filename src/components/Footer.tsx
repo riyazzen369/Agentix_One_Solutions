@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { MapPin, Mail, Clock } from "lucide-react";
-import { legalNav, nav, services, site, whatsappHref, LEGAL_NOTICE } from "@/content/site";
+import { MapPin, Mail, Clock, Phone } from "lucide-react";
+import { legalNav, nav, phoneDisplay, phoneHref, services, site, whatsappHref, LEGAL_NOTICE } from "@/content/site";
 import { Logo } from "./Navbar";
 
 export function Footer() {
@@ -14,6 +14,7 @@ export function Footer() {
           <ul className="space-y-2 text-sm text-lemon/80">
             <li className="flex gap-2"><MapPin aria-hidden className="h-4 w-4 shrink-0 translate-y-1" />Bengaluru, Karnataka, India</li>
             <li className="flex gap-2"><Mail aria-hidden className="h-4 w-4 shrink-0 translate-y-1" />{site.contact.email ? <a className="hover:text-mint" href={`mailto:${site.contact.email}`}>{site.contact.email}</a> : "[PLACEHOLDER: Business email]"}</li>
+            {phoneDisplay && <li className="flex gap-2"><Phone aria-hidden className="h-4 w-4 shrink-0 translate-y-1" /><a className="hover:text-mint" href={phoneHref}>{phoneDisplay}</a></li>}
             <li className="flex gap-2"><Clock aria-hidden className="h-4 w-4 shrink-0 translate-y-1" />{site.contact.hours}</li>
           </ul>
         </div>
