@@ -17,9 +17,7 @@ export const site = {
     responseNote: "Our team will contact you within 24 hours.", // [PLACEHOLDER] confirm before launch
   },
   socials: [
-    { label: "LinkedIn", href: "" },
-    { label: "Instagram", href: "" },
-    { label: "X (Twitter)", href: "" },
+    { label: "Follow on LinkedIn", href: "https://www.linkedin.com/in/mohamed-riyaz-s-8458891b1" },
   ],
   legalEntity: "[PLACEHOLDER: Registered business / legal entity name]",
   gstin: "[PLACEHOLDER: GSTIN, if registered]",
