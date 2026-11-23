@@ -10,7 +10,7 @@ import { cn } from "@/lib/cn";
 
 export function Logo({ className }: { className?: string }) {
   return (
-    <Link href="/" className={cn("flex items-center gap-2.5 font-display font-bold uppercase leading-none tracking-tight", className)} aria-label={`${site.name} — home`}>
+    <Link href="/" className={cn("flex min-h-[44px] items-center gap-2.5 font-display font-bold uppercase leading-none tracking-tight", className)} aria-label={`${site.name} — home`}>
       <span aria-hidden className="grid h-9 w-9 place-items-center rounded-lg border-2 border-current bg-lavender text-ink text-sm">A1</span>
       <span className="text-[15px] sm:text-base">
         Agentix One<span className="block text-[11px] tracking-[0.2em]">Solution</span>
@@ -68,6 +68,7 @@ export function Navbar() {
           </button>
         </div>
       </div>
+      <span aria-hidden className="scroll-progress absolute -bottom-[2px] left-0 h-[3px] w-full origin-left bg-lavender" />
 
       <dialog
         id="mobile-menu"
@@ -85,8 +86,8 @@ export function Navbar() {
           </div>
           <nav aria-label="Mobile" className="mt-8 flex-1 overflow-y-auto">
             <ul className="space-y-1">
-              {[{ label: "Home", href: "/" }, ...nav].map((n) => (
-                <li key={n.href}>
+              {[{ label: "Home", href: "/" }, ...nav].map((n, i) => (
+                <li key={n.href} className="menu-item" style={{ animationDelay: `${60 + i * 40}ms` }}>
                   <Link
                     href={n.href}
                     onClick={() => setOpen(false)}

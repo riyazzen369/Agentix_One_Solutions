@@ -20,9 +20,9 @@ export default function ServicesPage() {
     <>
       <PageHeader eyebrow="Services" title="Eight ways to put AI to work in your business" text="Pick one system or combine them. Every engagement starts with a free call and a written scope, so you know exactly what you get and what it costs." />
       <nav aria-label="Jump to service" className="border-b-2 border-ink bg-alabaster">
-        <ul className="container flex gap-2 overflow-x-auto py-3 text-sm font-semibold">
+        <ul className="container flex snap-x snap-mandatory scroll-px-4 gap-2 overflow-x-auto py-3 text-sm font-semibold [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {services.map((s) => (
-            <li key={s.slug} className="shrink-0"><a href={`#${s.slug}`} className="inline-flex min-h-[40px] items-center rounded-full border-2 border-ink px-3 hover:bg-mint">{s.title}</a></li>
+            <li key={s.slug} className="shrink-0 snap-start"><a href={`#${s.slug}`} className="inline-flex min-h-[44px] items-center rounded-full border-2 border-ink px-4 transition-colors hover:bg-mint">{s.title}</a></li>
           ))}
         </ul>
       </nav>

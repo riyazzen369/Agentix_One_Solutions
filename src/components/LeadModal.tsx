@@ -26,9 +26,10 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
         ref={ref}
         aria-labelledby="lead-title"
         onClick={(e) => e.target === ref.current && ref.current?.close()}
-        className="m-auto w-[calc(100%-1.5rem)] max-w-xl rounded-brut border-2 border-ink bg-alabaster p-0 text-ink shadow-brut-lg"
+        className="lead-sheet m-auto w-[calc(100%-1.5rem)] max-w-xl rounded-brut border-2 border-ink bg-alabaster p-0 text-ink shadow-brut-lg max-sm:mb-0 max-sm:w-full max-sm:max-w-none max-sm:rounded-b-none max-sm:border-x-0 max-sm:border-b-0"
       >
-        <div className="max-h-[88dvh] overflow-y-auto p-5 sm:p-8">
+        <div className="max-h-[90dvh] overflow-y-auto overscroll-contain p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:p-8">
+          <span aria-hidden className="mx-auto -mt-1 mb-4 block h-1.5 w-12 rounded-full bg-ink/25 sm:hidden" />
           <div className="mb-5 flex items-start justify-between gap-4">
             <div>
               <p className="eyebrow text-slate">Free · No obligation</p>

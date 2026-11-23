@@ -83,7 +83,7 @@ export function ContactForm({ defaultService, compact }: { defaultService?: stri
   const input = (name: FieldName, text: string, type = "text", auto?: string, placeholder?: string) => (
     <div>
       {label(name, text)}
-      <input type={type} autoComplete={auto} placeholder={placeholder} className="field" {...fieldProps(name)} />
+      <input type={type} autoComplete={auto} placeholder={placeholder} inputMode={type === "tel" ? "tel" : type === "email" ? "email" : undefined} enterKeyHint="next" className="field" {...fieldProps(name)} />
       {err(name)}
     </div>
   );

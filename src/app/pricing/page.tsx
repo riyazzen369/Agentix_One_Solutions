@@ -48,7 +48,16 @@ export default function PricingPage() {
         return (
           <section key={t.title} aria-labelledby={id} className="container py-14">
             <h2 id={id} className="text-3xl uppercase sm:text-4xl" data-reveal>{t.title}</h2>
-            <div data-reveal className="mt-6 overflow-x-auto rounded-brut border-2 border-ink bg-alabaster shadow-brut">
+            <ul data-reveal className="mt-6 grid gap-3 sm:hidden">
+              {t.rows.map(([a, b, c]) => (
+                <li key={a} className="rounded-brut border-2 border-ink bg-alabaster p-4 shadow-brut-sm">
+                  <p className="font-display text-lg font-bold leading-tight">{a}</p>
+                  <p className="mt-1 font-display text-xl font-bold">{b}</p>
+                  <p className="mt-2 border-t-2 border-ink pt-2 text-[15px] text-ink/80"><span className="sr-only">{t.cols[2]}: </span>{c}</p>
+                </li>
+              ))}
+            </ul>
+            <div data-reveal className="mt-6 hidden overflow-x-auto rounded-brut border-2 border-ink bg-alabaster shadow-brut sm:block">
               <table className="w-full min-w-[560px] border-collapse text-left">
                 <caption className="sr-only">{t.title} — {PRICE_NOTE}</caption>
                 <thead className="bg-ink text-lemon">

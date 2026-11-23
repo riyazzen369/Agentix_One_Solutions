@@ -7,8 +7,8 @@ import { Icon } from "./Icon";
 const chips: { icon: IconName; label: string; status: string; pos: string; depth: number; delay: string }[] = [
   { icon: "bot", label: "AI Chat", status: "Lead qualified", pos: "left-0 top-[4%]", depth: 1.4, delay: "0s" },
   { icon: "workflow", label: "Workflow Automation", status: "CRM updated", pos: "right-0 top-[10%]", depth: 0.9, delay: "-1.2s" },
-  { icon: "linkedin", label: "LinkedIn Outreach", status: "Reply tracked", pos: "-left-1 top-[44%] sm:-left-4", depth: 1.7, delay: "-2.4s" },
-  { icon: "wallet", label: "Payment Follow-Up", status: "Link shared", pos: "-right-1 top-[50%] sm:-right-4", depth: 1.2, delay: "-3.1s" },
+  { icon: "linkedin", label: "LinkedIn Outreach", status: "Reply tracked", pos: "left-0 top-[44%]", depth: 1.7, delay: "-2.4s" },
+  { icon: "wallet", label: "Payment Follow-Up", status: "Link shared", pos: "right-0 top-[50%]", depth: 1.2, delay: "-3.1s" },
   { icon: "megaphone", label: "Content Automation", status: "Post scheduled", pos: "left-[4%] bottom-[3%]", depth: 0.8, delay: "-0.6s" },
   { icon: "phone", label: "Cold Call Agent", status: "Meeting booked", pos: "right-[4%] bottom-[8%]", depth: 1.5, delay: "-1.8s" },
 ];
@@ -47,7 +47,7 @@ export function HeroCenterpiece() {
   }, [reduce, px, py]);
 
   return (
-    <div ref={ref} role="img" aria-label="3D alien robot with glowing neon-blue antennae, surrounded by automation cards: AI Chat, Workflow Automation, LinkedIn Outreach, Payment Follow-Up, Content Automation and Cold Call Agent" className="relative mx-auto aspect-square w-full max-w-[560px] [perspective:1100px]">
+    <div ref={ref} role="img" aria-label="3D alien robot with glowing neon-blue antennae, surrounded by automation cards: AI Chat, Workflow Automation, LinkedIn Outreach, Payment Follow-Up, Content Automation and Cold Call Agent" className="relative mx-auto aspect-square w-full max-w-[min(560px,100%)] [perspective:1100px]">
       <motion.div style={{ rotateX, rotateY }} className="absolute inset-0 [transform-style:preserve-3d]">
         <div className="absolute inset-[13%] rounded-full border-2 border-ink [transform:rotateX(72deg)] [transform-style:preserve-3d]">
           <div className="anim-orbit absolute inset-0">

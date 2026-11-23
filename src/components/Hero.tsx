@@ -7,10 +7,10 @@ import { ArrowRight } from "lucide-react";
 export function Hero() {
   return (
     <section className="dots relative overflow-hidden border-b-2 border-ink">
-      <div className="container grid min-h-[calc(100svh-72px)] items-center gap-10 py-12 lg:grid-cols-[1.05fr_1fr] lg:py-16">
+      <div className="container grid min-h-[calc(100svh-72px)] items-center gap-[clamp(2.5rem,5vw,4rem)] py-[clamp(2.5rem,6vw,4.5rem)] lg:grid-cols-[1.05fr_1fr]">
         <div>
           <p className="eyebrow inline-block rounded-full border-2 border-ink bg-alabaster px-3 py-1.5">AI Agency • Freelancing • Automation</p>
-          <h1 className="mt-6 text-[3.1rem] uppercase leading-[0.92] sm:text-7xl xl:text-[5.6rem]">
+          <h1 className="mt-6 text-[clamp(2.9rem,6.4vw+0.6rem,5.75rem)] uppercase leading-[0.92]">
             Your business, running <span className="relative inline-block whitespace-nowrap"><span aria-hidden className="absolute inset-x-[-0.06em] bottom-[0.06em] h-[0.3em] bg-lavender" /><span className="relative">on AI.</span></span>
           </h1>
           <p className="mt-6 max-w-xl text-lg text-ink/85 sm:text-xl [text-wrap:pretty]">

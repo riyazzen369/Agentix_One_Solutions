@@ -3,7 +3,7 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
-    container: { center: true, padding: { DEFAULT: "1rem", sm: "1.5rem", lg: "2rem" }, screens: { "2xl": "1280px" } },
+    container: { center: true, padding: "clamp(1rem, 4vw, 2.5rem)", screens: { "2xl": "1360px" } },
     extend: {
       colors: {
         lemon: "#FFF21A",
