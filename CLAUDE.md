@@ -1,8 +1,11 @@
 # Project notes
-- Next.js 15 App Router + TS + Tailwind 3. Brand tokens in `tailwind.config.ts` (lemon, ink, lavender, alabaster, slate, mint).
-- Content is centralized in `src/content/*`; pages in `src/app/*`; reusable UI in `src/components/*`.
+- Next.js 15 App Router + TS 5 + Tailwind 3. Brand tokens in `tailwind.config.ts` (lemon, ink, lavender, alabaster, slate, mint, neon).
+- Content is centralized in `src/content/*`; pages in `src/app/*`; reusable UI in `src/components/*`. Full docs in `README.md` and `docs/`.
+- Work directly on `main`; every push auto-deploys to Vercel (https://agentixonesolutions.vercel.app). No PR step.
 - Never invent client names, testimonials, metrics or contact details — use `[PLACEHOLDER]`.
 - Scroll reveal = `data-reveal` attribute + `RevealObserver` (content stays visible without JS / with reduced motion).
 - Lead CTAs use `LeadButton` (opens modal, falls back to `/contact#lead-form`).
+- Logo geometry lives in `src/lib/logo-paths.ts` (used by `LogoMark`, favicon, share image).
 - Motion: page fade via `app/template.tsx`, CSS scroll-progress bar, staggered reveals; all disabled under prefers-reduced-motion.
+- Keep prices/policy wording identical across `site.ts`, `pricing.ts`, `legal.ts`, `agreement.ts`.
 - Verify with `npm run lint && npm run typecheck && npm run build`.
