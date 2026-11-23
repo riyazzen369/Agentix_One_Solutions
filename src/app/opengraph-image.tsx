@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { site } from "@/content/site";
+import { logoA, logoShapes, LOGO_VIEWBOX } from "@/lib/logo-paths";
 
 export const alt = `${site.name} — ${site.tagline}`;
 export const size = { width: 1200, height: 630 };
@@ -14,7 +15,12 @@ export default function OgImage() {
           <div style={{ fontSize: 92, fontWeight: 800, lineHeight: 0.95, color: "#171717", marginTop: 28 }}>YOUR BUSINESS, RUNNING ON AI.</div>
           <div style={{ fontSize: 30, color: "#171717", marginTop: 28 }}>{site.tagline}</div>
         </div>
-        <div style={{ width: 260, height: 260, background: "#A65BFF", border: "8px solid #171717", borderRadius: 40, boxShadow: "16px 16px 0 #171717", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 110, fontWeight: 800, color: "#171717" }}>AI</div>
+        <div style={{ width: 300, height: 300, background: "#0B0B10", border: "8px solid #171717", borderRadius: 48, boxShadow: "16px 16px 0 #171717", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <svg width="220" height="220" viewBox={LOGO_VIEWBOX}>
+            {logoShapes.map((p) => <polygon key={p.points} points={p.points} fill={p.fill} />)}
+            <path d={logoA.d} fill={logoA.fill} fillRule="evenodd" />
+          </svg>
+        </div>
       </div>
     ),
     size,

@@ -37,6 +37,7 @@ export default function ContactPage() {
             </div>
             <ul className="mt-6 space-y-3 border-t-2 border-ink pt-5 text-[15px]">
               <li className="flex gap-3"><MapPin aria-hidden className="h-5 w-5 shrink-0" />Bengaluru, Karnataka, India</li>
+              {site.contact.email && <li className="flex gap-3"><Mail aria-hidden className="h-5 w-5 shrink-0" /><a className="link-u break-all" href={`mailto:${site.contact.email}`}>{site.contact.email}</a></li>}
               {phoneDisplay && <li className="flex gap-3"><Phone aria-hidden className="h-5 w-5 shrink-0" /><a className="link-u" href={phoneHref}>{phoneDisplay}</a></li>}
               <li className="flex gap-3"><Clock aria-hidden className="h-5 w-5 shrink-0" />{site.contact.hours}</li>
             </ul>

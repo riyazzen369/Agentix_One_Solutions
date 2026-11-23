@@ -13,7 +13,7 @@ export const site = {
   contact: {
     whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "",
     email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "",
-    hours: "[PLACEHOLDER: Business hours]",
+    hours: "9:00 AM – 9:00 PM IST",
     responseNote: "Our team will contact you within 24 hours.", // [PLACEHOLDER] confirm before launch
   },
   socials: [
