@@ -10,6 +10,7 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { FAQ } from "@/components/FAQ";
 import { CTASection } from "@/components/CTASection";
 import { JsonLd } from "@/components/JsonLd";
+import { TrustStrip } from "@/components/TrustStrip";
 
 export const metadata: Metadata = pageMeta({
   title: "Pricing — Websites, AI Chatbots & Automation Plans",
@@ -79,6 +80,8 @@ export default function PricingPage() {
           </ul>
         </div>
       </section>
+
+      <TrustStrip />
 
       <section aria-labelledby="pricing-faq" className="container grid gap-10 py-16 lg:grid-cols-[0.8fr_1.2fr]">
         <SectionHeading id="pricing-faq" eyebrow="FAQ" title="Pricing questions" />

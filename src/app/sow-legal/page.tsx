@@ -23,7 +23,8 @@ export default function SowLegalPage() {
         title="SOW & legal documentation"
         text="Every project begins with a clear Scope of Work, so both parties understand deliverables, timelines, and responsibilities before any work starts."
       >
-        <Button href="/sow-template" arrow>View SOW template</Button>
+        <Button href="/client-agreement" arrow>Read our client agreement</Button>
+        <Button href="/sow-template" variant="secondary">View SOW template</Button>
       </PageHeader>
 
       <section aria-labelledby="sow-includes" className="container py-16 sm:py-20">

@@ -111,7 +111,7 @@ export const pricingNotes = [
   "Prices are starting prices and may change based on scope, integrations, and complexity.",
   "Third-party costs such as hosting, domain, WhatsApp Business API, OpenAI/API usage, SMS, calling minutes, and premium tools are billed separately.",
   "GST will be added as applicable.",
-  "50% advance is required to begin most projects; remaining payment is due at defined milestones.",
+  "A 40–50% advance is required to begin projects; the balance is due at milestones defined in your SOW. Retainers are billed in advance.",
   "Retainers cover support and optimization, not unlimited new development.",
   "Custom enterprise systems, marketplaces, complex SaaS platforms, and multi-agent AI systems are quoted separately.",
 ];

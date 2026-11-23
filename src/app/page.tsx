@@ -11,6 +11,7 @@ import { FAQ } from "@/components/FAQ";
 import { Button } from "@/components/Button";
 import { ProcessSteps } from "@/components/ProcessSteps";
 import { JsonLd } from "@/components/JsonLd";
+import { TrustStrip } from "@/components/TrustStrip";
 
 export const metadata: Metadata = {
   ...pageMeta({
@@ -59,6 +60,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <div className="pt-14 sm:pt-20"><TrustStrip /></div>
 
       <section aria-labelledby="faq-title" className="container grid gap-10 py-20 sm:py-28 lg:grid-cols-[0.8fr_1.2fr]">
         <SectionHeading eyebrow="FAQ" id="faq-title" title="Straight answers" text="Pricing, payments, ownership and what we can (and can’t) promise." />

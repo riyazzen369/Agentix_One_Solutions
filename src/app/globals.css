@@ -54,3 +54,17 @@ dialog[open] { animation: dlg 0.18s ease-out; }
   html { scroll-behavior: auto; }
   dialog[open] { animation: none; }
 }
+
+/* Click-to-highlight (agreement page) */
+[data-hl] { transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s; }
+[data-hl].is-hl, [data-hl]:target { background-color: #fff; box-shadow: 6px 6px 0 0 #a65bff; outline: 3px solid #00e5a8; outline-offset: 3px; }
+.hl-badge { display: none; }
+[data-hl].is-hl .hl-badge, [data-hl]:target .hl-badge { display: inline-flex; }
+
+@media print {
+  header, footer, .no-print, [aria-label="How we protect your project"] { display: none !important; }
+  body { background: #fff !important; padding: 0 !important; }
+  .dots { background-image: none !important; }
+  .card, [data-hl] { box-shadow: none !important; outline: none !important; break-inside: avoid; }
+  .js [data-reveal] { opacity: 1 !important; transform: none !important; }
+}

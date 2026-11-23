@@ -46,6 +46,7 @@ export const nav = [
 ];
 
 export const legalNav = [
+  { label: "Client Agreement (MSA)", href: "/client-agreement" },
   { label: "Privacy Policy", href: "/privacy-policy" },
   { label: "Terms & Conditions", href: "/terms-and-conditions" },
   { label: "Refund & Cancellation", href: "/refund-cancellation-policy" },
@@ -226,7 +227,7 @@ export const faqs: Faq[] = [
   { q: "Are the prices on this site final?", a: "No. All prices are starting prices. Your final quote depends on scope, integrations, and complexity, and is confirmed in writing in the Statement of Work before work begins." },
   { q: "Are third-party costs included?", a: "No. Hosting, domain, WhatsApp Business API, OpenAI/API usage, SMS, calling minutes, and premium tools are billed separately by the respective providers." },
   { q: "Is GST included?", a: "GST will be added as applicable." },
-  { q: "How does payment work?", a: "A 50% advance is required to begin most projects. The remaining payment is due at milestones defined in your SOW." },
+  { q: "How does payment work?", a: "A 40–50% advance is required to begin projects, and the balance is due at milestones defined in your SOW. Retainers are billed in advance each month. Every project is covered by a signed Master Service Agreement and SOW." },
   { q: "Do retainers include new development?", a: "Retainers cover support and optimization, not unlimited new development. New features or systems are scoped and quoted separately." },
   { q: "Who owns the work after the project?", a: "Ownership of deliverables is defined in your SOW. Typically, ownership of custom deliverables transfers to you once full payment is received; third-party tools remain under their own licences." },
   { q: "Can you guarantee more leads or revenue?", a: "No one can honestly guarantee that. We build systems designed to save time and improve follow-up, and we agree on measurable deliverables in the SOW — but business outcomes depend on many factors outside our control." },
