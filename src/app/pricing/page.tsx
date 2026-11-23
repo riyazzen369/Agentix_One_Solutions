@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Info } from "lucide-react";
-import { appPlan, priceTables, pricingNotes, websitePlans } from "@/content/pricing";
+import { appPlan, priceTables, pricingNotes, websiteBillable, websitePlans } from "@/content/pricing";
 import { faqs, PRICE_NOTE } from "@/content/site";
 import { pageMeta, faqLd } from "@/lib/seo";
 import { PageHeader } from "@/components/PageHeader";
 import { PricingCard } from "@/components/PricingCard";
+import { WebsitePlanCard } from "@/components/WebsitePlanCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { FAQ } from "@/components/FAQ";
 import { CTASection } from "@/components/CTASection";
@@ -12,7 +13,7 @@ import { JsonLd } from "@/components/JsonLd";
 
 export const metadata: Metadata = pageMeta({
   title: "Pricing — Websites, AI Chatbots & Automation Plans",
-  description: "Transparent starting prices for websites from ₹17,499, apps from ₹27,999, AI chatbots from ₹10,499, workflow automation from ₹5,599 and monthly AI retainers. GST extra.",
+  description: "Website plans from ₹6,000, apps from ₹19,599, AI chatbots from ₹7,349, workflow automation from ₹3,919 and monthly AI retainers. GST extra.",
   path: "/pricing",
 });
 
@@ -22,9 +23,15 @@ export default function PricingPage() {
       <PageHeader eyebrow="Pricing" title="Simple pricing. No hidden costs." text={`${PRICE_NOTE} GST and third-party costs are extra — see the notes below.`} />
 
       <section aria-labelledby="web-plans" className="container py-16 sm:py-20">
-        <SectionHeading id="web-plans" eyebrow="Websites" title="Website plans" />
+        <SectionHeading id="web-plans" eyebrow="Websites" title="Choose your website building plan" text="Get your business online and ready to grow." />
         <div className="mt-12 grid items-start gap-6 lg:grid-cols-3">
-          {websitePlans.map((p) => <PricingCard key={p.name} plan={p} service="Website & App Development" />)}
+          {websitePlans.map((p) => <WebsitePlanCard key={p.name} plan={p} />)}
+        </div>
+        <div data-reveal className="mt-10 rounded-brut border-2 border-ink bg-alabaster p-5 shadow-brut-sm sm:p-6">
+          <h3 className="font-display text-lg font-bold">Separately billable &amp; renewals</h3>
+          <ul className="mt-3 list-disc space-y-1 pl-5 text-[15px] marker:text-ink">
+            {websiteBillable.map((b) => <li key={b}>{b}</li>)}
+          </ul>
         </div>
       </section>
 

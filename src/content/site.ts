@@ -87,7 +87,7 @@ export const services: Service[] = [
     included: ["UX and custom UI design", "Responsive build for every screen size", "Lead forms and WhatsApp click-to-chat", "Basic SEO and analytics setup", "E-commerce, booking or dashboard features as scoped", "Launch support and handover"],
     outcome: "A professional online presence that captures more leads and makes it easy for customers to contact or buy from you.",
     timeline: "5–21 working days for websites; 3–6 weeks for apps",
-    price: "From ₹17,499 (websites) · From ₹27,999 (apps)",
+    price: "From ₹6,000 (websites) · From ₹19,599 (apps)",
   },
   {
     slug: "workflow-agent-automation",
@@ -99,7 +99,7 @@ export const services: Service[] = [
     included: ["Process mapping of your current workflow", "Automation build across your existing tools", "AI steps for classification, summaries or drafting", "Error alerts and fallback handling", "Documentation and team walkthrough"],
     outcome: "Less manual work, fewer missed follow-ups, and a team that spends time on customers instead of spreadsheets.",
     timeline: "3–10 working days per workflow",
-    price: "From ₹5,599 per workflow",
+    price: "From ₹3,919 per workflow",
   },
   {
     slug: "social-media-content-automation",
@@ -111,7 +111,7 @@ export const services: Service[] = [
     included: ["Monthly content calendar", "AI-assisted post and caption drafts", "Hashtag and topic research", "Repurposing long content into short posts", "Scheduling support", "Monthly performance summary"],
     outcome: "Consistent, on-brand posting without the daily scramble — with you approving everything before it goes live.",
     timeline: "Setup in 5–7 working days, then monthly",
-    price: "From ₹13,999/month",
+    price: "From ₹9,799/month",
   },
   {
     slug: "linkedin-automation-outreach",
@@ -123,7 +123,7 @@ export const services: Service[] = [
     included: ["Profile optimization", "Ideal-customer targeting", "Personalized connection and DM sequences", "Reply tracking and lead nurturing", "CRM or Google Sheets lead capture", "Activity kept within LinkedIn's usage limits"],
     outcome: "A steady, trackable pipeline of conversations with the people you actually want to sell to.",
     timeline: "Setup in 7–10 working days, then monthly",
-    price: "From ₹17,499 setup + ₹6,999/month",
+    price: "From ₹12,249 setup + ₹4,899/month",
   },
   {
     slug: "ai-chatbots",
@@ -135,7 +135,7 @@ export const services: Service[] = [
     included: ["Chatbot trained on your FAQs and offerings", "Lead qualification questions", "Appointment booking or callback requests", "Human handover when needed", "CRM, Sheets or email notifications", "Conversation review and tuning"],
     outcome: "Faster replies, fewer missed enquiries, and qualified leads delivered straight to your team.",
     timeline: "5–15 working days",
-    price: "From ₹10,499",
+    price: "From ₹7,349",
   },
   {
     slug: "cold-call-ai-agent",
@@ -147,7 +147,7 @@ export const services: Service[] = [
     included: ["Call script and qualification logic", "AI voice agent setup", "Interested-lead flagging and call summaries", "CRM or Sheets updates", "Follow-up triggers for your sales team", "Guidance on consent and calling regulations"],
     outcome: "More leads contacted in less time, with your team focusing only on people who showed interest.",
     timeline: "2–4 weeks",
-    price: "From ₹34,999 setup + ₹9,999/month",
+    price: "From ₹24,499 setup + ₹6,999/month",
   },
   {
     slug: "payment-follow-up-agent",
@@ -159,7 +159,7 @@ export const services: Service[] = [
     included: ["Reminder schedule before and after due dates", "Payment link sharing", "WhatsApp, email and SMS channels", "Escalation to your team for overdue accounts", "Paid/unpaid status tracking", "Weekly summary of outstanding amounts"],
     outcome: "Less time chasing payments and a clear view of what's pending — helping you recover dues faster.",
     timeline: "1–3 weeks",
-    price: "From ₹13,999 setup + ₹4,999/month",
+    price: "From ₹9,799 setup + ₹3,499/month",
   },
   {
     slug: "sow-legal-documentation",
@@ -187,15 +187,15 @@ export const flows: Flow[] = [
 
 export type Automation = { icon: IconName; title: string; problem: string; flow: string[]; tools: string[]; outcome: string; price: string };
 export const automations: Automation[] = [
-  { icon: "filter", title: "Lead qualification automation", problem: "Your team wastes time on enquiries that were never a fit, while good leads wait.", flow: ["Form, ad or chat lead arrives", "AI scores against your criteria", "Qualified lead routed to sales", "Others get a nurture message"], tools: ["Website forms", "Meta/Google lead forms", "OpenAI or similar LLM APIs", "CRM or Google Sheets"], outcome: "Sales time focused on the leads most likely to convert.", price: "From ₹20,999" },
-  { icon: "message", title: "WhatsApp follow-up automation", problem: "Leads go cold because nobody followed up within the first few hours.", flow: ["New lead captured", "Instant WhatsApp welcome", "Timed follow-up sequence", "Reply alerts your team"], tools: ["WhatsApp Business API (via an approved provider)", "CRM or Google Sheets", "n8n, Make or Zapier"], outcome: "Every lead gets a fast, consistent follow-up.", price: "From ₹5,599" },
-  { icon: "sheet", title: "CRM and Google Sheets automation", problem: "Data lives in five places and someone copies it manually every day.", flow: ["Event in one tool", "Data cleaned and mapped", "CRM / Sheet updated", "Team notified on changes"], tools: ["Google Sheets", "Zoho, HubSpot or similar CRMs", "Gmail / Outlook", "n8n, Make or Zapier"], outcome: "One reliable source of truth with less manual data entry.", price: "From ₹5,599" },
-  { icon: "calendar", title: "Appointment booking automation", problem: "Back-and-forth messages to fix a time cost you bookings.", flow: ["Customer asks to book", "Chatbot checks availability", "Slot confirmed", "Reminders sent before visit"], tools: ["Google Calendar or Calendly", "Website or WhatsApp chatbot", "Email / WhatsApp reminders"], outcome: "Easier booking and fewer no-shows thanks to reminders.", price: "From ₹17,499" },
-  { icon: "wallet", title: "Invoice and payment reminder automation", problem: "Chasing pending payments eats hours and strains client relationships.", flow: ["Invoice due date nears", "Polite reminder with payment link", "Follow-ups after due date", "Escalation to your team"], tools: ["Razorpay or similar payment links", "Accounting tool or Google Sheets", "WhatsApp, email and SMS"], outcome: "Consistent follow-up that helps you recover dues faster.", price: "From ₹13,999 setup + ₹4,999/month" },
-  { icon: "megaphone", title: "Social media content automation", problem: "Posting is inconsistent because content creation always gets pushed to tomorrow.", flow: ["Topic or idea added", "AI drafts post + caption", "You approve or edit", "Scheduled across platforms"], tools: ["LLM APIs for drafting", "Canva or design templates", "Meta Business Suite / scheduling tools"], outcome: "A consistent posting rhythm with less effort.", price: "From ₹13,999/month" },
-  { icon: "linkedin", title: "LinkedIn outreach automation", problem: "Manual prospecting and messaging doesn't scale beyond a few people a day.", flow: ["Prospect list built", "Personalized connection + DM", "Replies tracked", "Meeting booked"], tools: ["LinkedIn (within platform limits)", "Sales Navigator (optional)", "CRM or Google Sheets", "Calendar booking links"], outcome: "More relevant conversations with decision-makers, all tracked.", price: "From ₹17,499 setup + ₹6,999/month" },
-  { icon: "phone", title: "Cold-call AI agent workflow", problem: "Your lead list is bigger than your team's calling capacity.", flow: ["Lead list uploaded", "AI voice agent calls", "Interest + summary logged", "Hot leads handed to sales"], tools: ["AI voice platforms", "Telephony provider", "CRM or Google Sheets"], outcome: "More leads reached, with humans calling back only the interested ones.", price: "From ₹34,999 setup + ₹9,999/month" },
-  { icon: "cog", title: "Internal operations automation", problem: "Approvals, reports and handoffs depend on someone remembering to do them.", flow: ["Trigger: form, date or status", "Task created + assigned", "Approvals collected", "Report sent automatically"], tools: ["Google Workspace / Microsoft 365", "Slack or WhatsApp groups", "n8n, Make or Zapier"], outcome: "Fewer dropped balls and less time spent on status updates.", price: "From ₹5,599" },
+  { icon: "filter", title: "Lead qualification automation", problem: "Your team wastes time on enquiries that were never a fit, while good leads wait.", flow: ["Form, ad or chat lead arrives", "AI scores against your criteria", "Qualified lead routed to sales", "Others get a nurture message"], tools: ["Website forms", "Meta/Google lead forms", "OpenAI or similar LLM APIs", "CRM or Google Sheets"], outcome: "Sales time focused on the leads most likely to convert.", price: "From ₹14,699" },
+  { icon: "message", title: "WhatsApp follow-up automation", problem: "Leads go cold because nobody followed up within the first few hours.", flow: ["New lead captured", "Instant WhatsApp welcome", "Timed follow-up sequence", "Reply alerts your team"], tools: ["WhatsApp Business API (via an approved provider)", "CRM or Google Sheets", "n8n, Make or Zapier"], outcome: "Every lead gets a fast, consistent follow-up.", price: "From ₹3,919" },
+  { icon: "sheet", title: "CRM and Google Sheets automation", problem: "Data lives in five places and someone copies it manually every day.", flow: ["Event in one tool", "Data cleaned and mapped", "CRM / Sheet updated", "Team notified on changes"], tools: ["Google Sheets", "Zoho, HubSpot or similar CRMs", "Gmail / Outlook", "n8n, Make or Zapier"], outcome: "One reliable source of truth with less manual data entry.", price: "From ₹3,919" },
+  { icon: "calendar", title: "Appointment booking automation", problem: "Back-and-forth messages to fix a time cost you bookings.", flow: ["Customer asks to book", "Chatbot checks availability", "Slot confirmed", "Reminders sent before visit"], tools: ["Google Calendar or Calendly", "Website or WhatsApp chatbot", "Email / WhatsApp reminders"], outcome: "Easier booking and fewer no-shows thanks to reminders.", price: "From ₹12,249" },
+  { icon: "wallet", title: "Invoice and payment reminder automation", problem: "Chasing pending payments eats hours and strains client relationships.", flow: ["Invoice due date nears", "Polite reminder with payment link", "Follow-ups after due date", "Escalation to your team"], tools: ["Razorpay or similar payment links", "Accounting tool or Google Sheets", "WhatsApp, email and SMS"], outcome: "Consistent follow-up that helps you recover dues faster.", price: "From ₹9,799 setup + ₹3,499/month" },
+  { icon: "megaphone", title: "Social media content automation", problem: "Posting is inconsistent because content creation always gets pushed to tomorrow.", flow: ["Topic or idea added", "AI drafts post + caption", "You approve or edit", "Scheduled across platforms"], tools: ["LLM APIs for drafting", "Canva or design templates", "Meta Business Suite / scheduling tools"], outcome: "A consistent posting rhythm with less effort.", price: "From ₹9,799/month" },
+  { icon: "linkedin", title: "LinkedIn outreach automation", problem: "Manual prospecting and messaging doesn't scale beyond a few people a day.", flow: ["Prospect list built", "Personalized connection + DM", "Replies tracked", "Meeting booked"], tools: ["LinkedIn (within platform limits)", "Sales Navigator (optional)", "CRM or Google Sheets", "Calendar booking links"], outcome: "More relevant conversations with decision-makers, all tracked.", price: "From ₹12,249 setup + ₹4,899/month" },
+  { icon: "phone", title: "Cold-call AI agent workflow", problem: "Your lead list is bigger than your team's calling capacity.", flow: ["Lead list uploaded", "AI voice agent calls", "Interest + summary logged", "Hot leads handed to sales"], tools: ["AI voice platforms", "Telephony provider", "CRM or Google Sheets"], outcome: "More leads reached, with humans calling back only the interested ones.", price: "From ₹24,499 setup + ₹6,999/month" },
+  { icon: "cog", title: "Internal operations automation", problem: "Approvals, reports and handoffs depend on someone remembering to do them.", flow: ["Trigger: form, date or status", "Task created + assigned", "Approvals collected", "Report sent automatically"], tools: ["Google Workspace / Microsoft 365", "Slack or WhatsApp groups", "n8n, Make or Zapier"], outcome: "Fewer dropped balls and less time spent on status updates.", price: "From ₹3,919" },
   { icon: "sparkles", title: "Custom AI agent development", problem: "Your process is unique and off-the-shelf tools don't fit.", flow: ["Discovery + process audit", "Agent designed with guardrails", "Built + integrated with your stack", "Tested, monitored, improved"], tools: ["LLM APIs", "Your internal tools and databases", "Custom APIs and webhooks"], outcome: "An AI agent shaped around how your business actually works.", price: "Custom quote" },
 ];
 
