@@ -25,6 +25,8 @@ Set in Vercel → Project → **Settings → Environment Variables** (Production
 | `NEXT_PUBLIC_WHATSAPP_NUMBER` | public | `919942721263` (digits, country code first) |
 | `CONTACT_TO_EMAIL` | secret | `md.riyazzen369@gmail.com` — inbox that receives leads |
 | `RESEND_API_KEY` | secret | **Not set yet.** Create at resend.com |
+| `SUPABASE_URL` | secret | `https://kgujijfpoucohmtlrbzn.supabase.co` (client sign-off database) |
+| `SUPABASE_PUBLISHABLE_KEY` | secret | Set in Vercel. Publishable key of the Agentix Supabase project; INSERT-only by row-level security. Get it from Supabase → Project Settings → API Keys |
 | `CONTACT_FROM_EMAIL` | secret | **Not set yet.** e.g. `Agentix Leads <leads@yourdomain.com>` on a domain verified in Resend |
 
 `NEXT_PUBLIC_*` values are embedded in the built pages, so **redeploy after changing them**.
@@ -37,6 +39,18 @@ Until `RESEND_API_KEY` and `CONTACT_FROM_EMAIL` exist, form submissions show an 
 2. Create an API key; add it to Vercel as `RESEND_API_KEY`.
 3. Add `CONTACT_FROM_EMAIL` (an address on the verified domain).
 4. Redeploy, then submit a test lead from the live site and confirm the email arrives.
+
+## Supabase (client sign-offs)
+
+| Item | Value |
+|---|---|
+| Project | `agentix-one-solutions` (separate from the Godfather project) |
+| Project ref / region | `kgujijfpoucohmtlrbzn` / `ap-south-1` (Mumbai) |
+| Table | `public.client_signoffs` — created by `supabase/migrations/20261124_client_signoffs.sql` |
+| Access rule | Row-level security on; the public key may **only insert**. Select / update / delete are not granted. |
+| Security advisor | No issues reported when created |
+
+To recreate on a new Supabase project: create the project, run the migration SQL (SQL editor), copy the project URL and publishable key into `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` in Vercel, then redeploy.
 
 ## Daily workflow (work directly on `main`)
 

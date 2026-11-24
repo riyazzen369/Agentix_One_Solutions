@@ -28,6 +28,7 @@ export default function ClientAgreementPage() {
         text="Every project starts with a written agreement, so you know exactly what you're paying for, when it's delivered, and what you own at the end."
       >
         <Button href="#msa" arrow className="no-print">Read the agreement</Button>
+        <Button href="/client-sign-off" variant="secondary" className="no-print">Sign online</Button>
         <PrintButton />
       </PageHeader>
 
@@ -78,6 +79,10 @@ export default function ClientAgreementPage() {
               </li>
             ))}
           </ol>
+          <div className="no-print mt-10 flex flex-col gap-4 rounded-brut border-2 border-ink bg-white p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+            <p className="font-display text-lg font-bold">Ready to sign? Accept all three online and get a receipt — no login needed.</p>
+            <Button href="/client-sign-off" arrow className="shrink-0">Sign online</Button>
+          </div>
           <h3 className="eyebrow mt-14">How signing works</h3>
           <ol className="mt-4 flex flex-wrap items-center gap-2 text-sm font-semibold">
             {signingSteps.map((s, i) => (

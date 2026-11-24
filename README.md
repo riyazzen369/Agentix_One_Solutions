@@ -21,7 +21,7 @@ Everything needed to rebuild the site from scratch is in this repo: code, conten
 
 ## Tech stack
 
-Next.js 15 (App Router) · React 19 · TypeScript 5 · Tailwind CSS 3.4 · Framer Motion · Lucide icons · React Hook Form + Zod · Resend (email, via REST API) · Fonts: Space Grotesk + Inter (self-hosted via Fontsource) · Hosted on Vercel.
+Next.js 15 (App Router) · React 19 · TypeScript 5 · Tailwind CSS 3.4 · Framer Motion · Lucide icons · React Hook Form + Zod · Resend (email) and Supabase (client sign-off records), both via REST APIs · Fonts: Space Grotesk + Inter (self-hosted via Fontsource) · Hosted on Vercel.
 
 ## Rebuild the site locally
 
@@ -49,6 +49,7 @@ Production preview: `npm run build && npm start`.
 src/app/            Pages (App Router), API route, sitemap, robots, icons, share image
 src/components/     Reusable UI (navbar, footer, hero, cards, forms, logo, ...)
 src/content/        All editable copy: site.ts, pricing.ts, legal.ts, agreement.ts
+supabase/migrations/ Database SQL (client sign-off table)
 src/lib/            Helpers: SEO/JSON-LD, form schema, logo geometry, class names
 public/brand/       Logo files (SVG mark + PNG lockups on dark and yellow)
 docs/               Architecture, design, content, deployment, reference material

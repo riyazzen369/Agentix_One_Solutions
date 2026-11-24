@@ -7,6 +7,7 @@ All copy, prices and legal text are **data files**, not hard-coded in pages. Edi
 | `src/content/site.ts` | Business name, tagline, contact details, hours, LinkedIn link, navigation, 8 services, 6 home flows, 10 automation use cases, process steps, testimonials (placeholders), form options, FAQs |
 | `src/content/pricing.ts` | Website Plans A/B/C, app plan, chatbot / automation / retainer tables, pricing notes |
 | `src/content/legal.ts` | Privacy, Terms, Refund & Cancellation, Cookie, Disclaimer, SOW template, "what every SOW covers" |
+| `src/content/signoff.ts` | Text shown on `/client-sign-off` (MSA, SOW terms, Data & Platform Compliance Acknowledgement), provider name, agreement version. **Draft adapted from the published agreement; replace with owner-approved wording and bump `AGREEMENT_VERSION`.** |
 | `src/content/agreement.ts` | Client Agreement page: key commitments, 3 sign-offs, 10 MSA clauses, onboarding checklist, invoice list |
 
 Contact values are read from environment variables (`NEXT_PUBLIC_CONTACT_EMAIL`, `NEXT_PUBLIC_WHATSAPP_NUMBER`) so they can change without touching code. Phone display (`+91 99427 21263`) is derived from the WhatsApp number.
