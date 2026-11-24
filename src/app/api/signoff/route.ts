@@ -1,6 +1,6 @@
-import { randomUUID } from "node:crypto";
+import { randomBytes } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
-import { signoffSchema } from "@/lib/signoff-schema";
+import { normalizePhone, signoffSchema } from "@/lib/signoff-schema";
 import { AGREEMENT_HASH, AGREEMENT_VERSION, PROVIDER } from "@/content/signoff";
 
 const hits = new Map<string, number[]>();
@@ -16,9 +16,14 @@ function rateLimited(ip: string) {
   return recent.length > MAX;
 }
 
+function makeRef() {
+  const ist = new Date(Date.now() + 5.5 * 3600 * 1000).toISOString().slice(0, 10).replace(/-/g, "");
+  return `AGX-${ist}-${randomBytes(3).toString("hex").toUpperCase()}`;
+}
+
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
-type SignRecord = { id: string; signedAt: string; fullName: string; whatsapp: string; addressOrPlace: string; userAgent: string };
+type SignRecord = { ref: string; signedAt: string; fullName: string; whatsapp: string; addressOrPlace: string; userAgent: string };
 
 // Insert-only: the publishable key cannot read, change or delete rows (enforced by row-level security).
 async function saveToSupabase(r: SignRecord): Promise<boolean> {
@@ -30,23 +35,25 @@ async function saveToSupabase(r: SignRecord): Promise<boolean> {
       method: "POST",
       headers: { apikey: key, "Content-Type": "application/json", Prefer: "return=minimal" },
       body: JSON.stringify({
-        id: r.id,
+        ref: r.ref,
         created_at: r.signedAt,
         full_name: r.fullName,
         whatsapp: r.whatsapp,
         address_or_place: r.addressOrPlace,
         accepted_msa: true,
         accepted_sow: true,
-        accepted_data: true,
+        accepted_dpa: true,
+        accepted_terms: true,
+        method: "typed-name",
         agreement_version: AGREEMENT_VERSION,
         agreement_hash: AGREEMENT_HASH,
         user_agent: r.userAgent.slice(0, 400),
       }),
     });
-    if (!res.ok) console.error("[sign-off] Supabase error", res.status, await res.text().catch(() => ""));
+    if (!res.ok) console.error("[signoff] Supabase error", res.status, await res.text().catch(() => ""));
     return res.ok;
   } catch (e) {
-    console.error("[sign-off] Supabase request failed", e);
+    console.error("[signoff] Supabase request failed", e);
     return false;
   }
 }
@@ -55,12 +62,13 @@ async function emailOwner(r: SignRecord): Promise<boolean> {
   const { RESEND_API_KEY: key, CONTACT_TO_EMAIL: to, CONTACT_FROM_EMAIL: from } = process.env;
   if (!key || !to || !from) return false;
   const rows: [string, string][] = [
-    ["Receipt ID", r.id],
+    ["Reference", r.ref],
     ["Signed at (IST)", new Date(r.signedAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "medium" })],
     ["Name", r.fullName],
     ["WhatsApp", r.whatsapp],
     ["Business address / place", r.addressOrPlace],
-    ["Accepted", "Master Service Agreement; SOW terms; Data & Platform Compliance Acknowledgement"],
+    ["Accepted", "Master Service Agreement; Statement of Work; Data & Platform Compliance Acknowledgement; terms and sign"],
+    ["Signature method", "typed name"],
     ["Agreement version", AGREEMENT_VERSION],
     ["Agreement hash", AGREEMENT_HASH],
   ];
@@ -71,15 +79,15 @@ async function emailOwner(r: SignRecord): Promise<boolean> {
       body: JSON.stringify({
         from,
         to: to.split(",").map((s) => s.trim()),
-        subject: `Client sign-off: ${r.fullName} (${r.id.slice(0, 8)})`,
+        subject: `Client sign-off: ${r.fullName} (${r.ref})`,
         html: `<h2>New client sign-off — ${esc(PROVIDER.trading)}</h2><table cellpadding="6">${rows.map(([k, v]) => `<tr><td><strong>${k}</strong></td><td>${esc(v)}</td></tr>`).join("")}</table>`,
         text: rows.map(([k, v]) => `${k}: ${v}`).join("\n"),
       }),
     });
-    if (!res.ok) console.error("[sign-off] Resend error", res.status, await res.text().catch(() => ""));
+    if (!res.ok) console.error("[signoff] Resend error", res.status, await res.text().catch(() => ""));
     return res.ok;
   } catch (e) {
-    console.error("[sign-off] Resend request failed", e);
+    console.error("[signoff] Resend request failed", e);
     return false;
   }
 }
@@ -98,33 +106,33 @@ export async function POST(req: NextRequest) {
   }
 
   const parsed = signoffSchema.safeParse(body);
-  if (!parsed.success) return fail("Please check the form fields and tick all three boxes.");
+  if (!parsed.success) return fail("Please check the form fields and tick all four boxes.");
 
   const { website, startedAt, fullName, whatsapp, addressOrPlace } = parsed.data;
   const record: SignRecord = {
-    id: randomUUID(),
+    ref: makeRef(),
     signedAt: new Date().toISOString(),
     fullName,
-    whatsapp,
+    whatsapp: normalizePhone(whatsapp),
     addressOrPlace,
     userAgent: req.headers.get("user-agent") ?? "",
   };
 
   // Bots: pretend success without storing anything.
   const tooFast = startedAt && Date.now() - Number(startedAt) < 3000;
-  if (website || tooFast) return NextResponse.json({ id: record.id, signedAt: record.signedAt, version: AGREEMENT_VERSION });
+  if (website || tooFast) return NextResponse.json({ ref: record.ref, signedAt: record.signedAt, version: AGREEMENT_VERSION });
 
   const configured = !!(process.env.SUPABASE_URL && process.env.SUPABASE_PUBLISHABLE_KEY) || !!process.env.RESEND_API_KEY;
   if (!configured && process.env.NODE_ENV !== "production") {
-    console.info("[sign-off] No storage configured — sign-off received:", record);
-    return NextResponse.json({ id: record.id, signedAt: record.signedAt, version: AGREEMENT_VERSION });
+    console.info("[signoff] No storage configured — sign-off received:", record);
+    return NextResponse.json({ ref: record.ref, signedAt: record.signedAt, version: AGREEMENT_VERSION });
   }
 
   const [saved, emailed] = await Promise.all([saveToSupabase(record), emailOwner(record)]);
   if (!saved && !emailed) {
-    console.error("[sign-off] Could not store or email the sign-off", record.id);
+    console.error("[signoff] Could not store or email the sign-off", record.ref);
     return fail("We couldn’t record your sign-off right now. Please message us on WhatsApp and we’ll record it for you.", 502);
   }
-  if (!saved) console.error("[sign-off] Stored by email only (database save failed)", record.id);
-  return NextResponse.json({ id: record.id, signedAt: record.signedAt, version: AGREEMENT_VERSION });
+  if (!saved) console.error("[signoff] Stored by email only (database save failed)", record.ref);
+  return NextResponse.json({ ref: record.ref, signedAt: record.signedAt, version: AGREEMENT_VERSION });
 }

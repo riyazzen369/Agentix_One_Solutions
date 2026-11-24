@@ -46,7 +46,7 @@ Until `RESEND_API_KEY` and `CONTACT_FROM_EMAIL` exist, form submissions show an 
 |---|---|
 | Project | `agentix-one-solutions` (separate from the Godfather project) |
 | Project ref / region | `kgujijfpoucohmtlrbzn` / `ap-south-1` (Mumbai) |
-| Table | `public.client_signoffs` — created by `supabase/migrations/20261124_client_signoffs.sql` |
+| Table | `public.client_signoffs` — created by the two SQL files in `supabase/migrations/` (run them in order) |
 | Access rule | Row-level security on; the public key may **only insert**. Select / update / delete are not granted. |
 | Security advisor | No issues reported when created |
 

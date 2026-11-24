@@ -92,18 +92,20 @@ Two route handlers: `/api/contact` (lead form) and `/api/sign-off` (client sign-
 
 **Security headers** (`next.config.mjs`): `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: DENY`, restrictive `Permissions-Policy`; `poweredByHeader` disabled.
 
-### `/api/sign-off` — `src/app/api/sign-off/route.ts`
+### `/api/signoff` — `src/app/api/signoff/route.ts`
 
 Records a client's acceptance of the three agreements. No client login and no list of records is ever shown to clients.
 
-- **Form** (`components/SignOffForm.tsx`, schema in `lib/signoff-schema.ts`): full name, WhatsApp number, business address or place, and three required checkboxes (MSA, SOW terms, Data & Platform Compliance Acknowledgement). Same spam checks as the contact form (honeypot, 3-second timing, 5 requests / 10 minutes per IP).
-- **Agreement text** lives in `src/content/signoff.ts`. The server computes a SHA-256 hash of the exact text plus `AGREEMENT_VERSION` and stores both with every sign-off, so each record proves which wording was accepted. Change the text → bump `AGREEMENT_VERSION`.
+- **Form** (`components/SignOffForm.tsx`, schema in `lib/signoff-schema.ts`): full name (the typed name is the signature), WhatsApp number (10 digits are saved as `+91…`; 10–15 digits accepted), business address or place (min 3 characters), and four required checkboxes: MSA, Statement of Work, Data & Platform Compliance Acknowledgement, and a final "I accept the terms and sign". Same spam checks as the contact form (honeypot, 3-second timing, 5 requests / 10 minutes per IP).
+- **Agreement text** lives in `src/content/signoff.ts` (owner-supplied, version `2026-11-24 v1`). The server computes a SHA-256 hash of the exact text plus the version and stores both with every sign-off. Change the text → bump `AGREEMENT_VERSION`.
+- **Reference:** the server generates `AGX-YYYYMMDD-XXXXXX` (IST date + 6 random hex). The receipt shows reference, name, date and version, with copy and print.
 - **Storage (both, best effort in parallel):**
-  1. **Supabase** insert into `public.client_signoffs` through the REST API with the publishable key. Row-level security allows INSERT only (see `supabase/migrations/20261124_client_signoffs.sql`).
+  1. **Supabase** insert into `public.client_signoffs` via the REST API with the publishable key. Row-level security allows INSERT only (`supabase/migrations/`).
   2. **Email** to `CONTACT_TO_EMAIL` via Resend (needs the Resend variables).
-- The request succeeds if at least one of the two worked. If both fail the visitor sees a message to use WhatsApp. The receipt ID is generated on the server, so no read access is needed.
-- Stored fields: id, timestamp, name, WhatsApp, address/place, three acceptances, agreement version + hash, user agent. IP addresses are **not** stored.
+- The request succeeds if at least one of the two worked. If both fail the visitor is told to use WhatsApp.
+- **Record fields:** ref, created_at (signed at), full_name, whatsapp (normalised), address_or_place, accepted_msa / accepted_sow / accepted_dpa / accepted_terms, method (`typed-name`), agreement_version, agreement_hash, user_agent. IP addresses are **not** stored.
 - **Viewing records:** only the owner, in the Supabase dashboard (project `agentix-one-solutions` → Table Editor → `client_signoffs`).
+- **Google Sheet:** when copying records into the Drive sheet, use the column **"Business address or place"** for `address_or_place`.
 
 No secrets are hard-coded anywhere; all come from environment variables.
 
