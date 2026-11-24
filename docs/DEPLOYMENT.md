@@ -25,6 +25,7 @@ Set in Vercel → Project → **Settings → Environment Variables** (Production
 | `NEXT_PUBLIC_WHATSAPP_NUMBER` | public | `919942721263` (digits, country code first) |
 | `CONTACT_TO_EMAIL` | secret | `md.riyazzen369@gmail.com` — inbox that receives leads |
 | `RESEND_API_KEY` | secret | **Not set yet.** Create at resend.com |
+| `ADMIN_EMAIL` | secret | `md.riyazzen369@gmail.com` — the only email allowed into `/admin` |
 | `SUPABASE_URL` | secret | `https://kgujijfpoucohmtlrbzn.supabase.co` (client sign-off database) |
 | `SUPABASE_PUBLISHABLE_KEY` | secret | Set in Vercel. Publishable key of the Agentix Supabase project; INSERT-only by row-level security. Get it from Supabase → Project Settings → API Keys |
 | `CONTACT_FROM_EMAIL` | secret | **Not set yet.** e.g. `Agentix Leads <leads@yourdomain.com>` on a domain verified in Resend |
@@ -51,6 +52,14 @@ Until `RESEND_API_KEY` and `CONTACT_FROM_EMAIL` exist, form submissions show an 
 | Security advisor | No issues reported when created |
 
 To recreate on a new Supabase project: create the project, run the migration SQL (SQL editor), copy the project URL and publishable key into `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` in Vercel, then redeploy.
+
+### Admin page setup (one time)
+
+1. Supabase dashboard → project `agentix-one-solutions` → **Authentication → Users → Add user → Create new user**. Use the `ADMIN_EMAIL` address, a strong password, and tick **Auto Confirm User**.
+2. **Authentication → Sign In / Providers** (or Settings) → switch **off** "Allow new users to sign up", so nobody else can create accounts.
+3. Open `https://<your-site>/admin`, sign in, and use the Pricing, Offers and Signed agreements tabs.
+4. To change the admin email: create the new user in Supabase, update `ADMIN_EMAIL` in Vercel, and add a migration that replaces the email in the policies from `20261125_*`.
+5. To reset the admin password: Supabase → Authentication → Users → the user → send recovery / set a new password.
 
 ## Daily workflow (work directly on `main`)
 

@@ -9,6 +9,7 @@ import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { LeadModalProvider } from "@/components/LeadModal";
 import { RevealObserver } from "@/components/RevealObserver";
 import { JsonLd } from "@/components/JsonLd";
+import { OfferBanner } from "@/components/OfferBanner";
 import { organizationLd, websiteLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: "#FFF21A", width: "device-width", initialScale: 1 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-IN" suppressHydrationWarning>
       <head>
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="pb-[76px] sm:pb-0">
         <LeadModalProvider>
+          <OfferBanner />
           <Navbar />
           <main id="main">{children}</main>
           <Footer />

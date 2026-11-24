@@ -8,6 +8,8 @@ import { Badge } from "@/components/Badge";
 import { LeadButton } from "@/components/LeadModal";
 import { buttonClass } from "@/components/Button";
 import { CTASection } from "@/components/CTASection";
+import { getContent } from "@/lib/site-content";
+import { applyAutomations } from "@/lib/pricing-overrides";
 
 export const metadata: Metadata = pageMeta({
   title: "AI Automations — Workflow, WhatsApp, LinkedIn & Payment Follow-Up",
@@ -15,14 +17,16 @@ export const metadata: Metadata = pageMeta({
   path: "/ai-automations",
 });
 
-export default function AutomationsPage() {
+export default async function AutomationsPage() {
+  const { pricing } = await getContent();
+  const list = applyAutomations(automations, pricing);
   return (
     <>
       <PageHeader eyebrow="AI Automations" title="Stop doing work a system can do" text="Ten automation use cases we build for growing businesses. Each one is mapped to your tools, tested before launch, and handed over with documentation.">
         <LeadButton className={buttonClass("primary")}>Get a free automation audit</LeadButton>
       </PageHeader>
       <div className="container grid gap-6 py-16 sm:py-20 lg:grid-cols-2">
-        {automations.map((a, i) => (
+        {list.map((a, i) => (
           <article key={a.title} data-reveal aria-labelledby={`auto-${i}`} className="card card-hover flex flex-col p-6 sm:p-8">
             <div className="flex items-start justify-between gap-4">
               <span className="grid h-12 w-12 place-items-center rounded-xl border-2 border-ink bg-lemon"><Icon name={a.icon} className="h-6 w-6" /></span>

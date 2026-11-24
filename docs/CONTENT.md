@@ -32,6 +32,8 @@ Each has: what it is, who it is for, what is included, business outcome, typical
 
 ## Pricing (all prices are **starting prices**, GST extra)
 
+> Prices can be changed without code in the **/admin → Pricing** tab (see `docs/ARCHITECTURE.md`). Saved prices override the defaults listed below; the reset arrow restores them. An **Offers** tab controls the site-wide offer banner.
+
 Standard line shown with prices: *"Starting price. Final quote depends on scope, integrations, and complexity."*
 
 **Website plans** (source: `docs/reference/pricing-plans-reference.png`)

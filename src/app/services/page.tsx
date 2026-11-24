@@ -8,6 +8,8 @@ import { LeadButton } from "@/components/LeadModal";
 import { buttonClass } from "@/components/Button";
 import { CTASection } from "@/components/CTASection";
 import { JsonLd } from "@/components/JsonLd";
+import { getContent } from "@/lib/site-content";
+import { applyServices } from "@/lib/pricing-overrides";
 
 export const metadata: Metadata = pageMeta({
   title: "Services — Websites, Apps, AI Chatbots & Automation",
@@ -15,7 +17,9 @@ export const metadata: Metadata = pageMeta({
   path: "/services",
 });
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const { pricing } = await getContent();
+  const list = applyServices(services, pricing);
   return (
     <>
       <PageHeader eyebrow="Services" title="Eight ways to put AI to work in your business" text="Pick one system or combine them. Every engagement starts with a free call and a written scope, so you know exactly what you get and what it costs." />
@@ -27,7 +31,7 @@ export default function ServicesPage() {
         </ul>
       </nav>
       <div className="container space-y-10 py-16 sm:py-20">
-        {services.map((s, i) => (
+        {list.map((s, i) => (
           <section key={s.slug} id={s.slug} aria-labelledby={`${s.slug}-title`} data-reveal className="card grid gap-8 p-6 sm:p-10 lg:grid-cols-[1.1fr_1fr]">
             <div>
               <div className="flex items-center gap-3">

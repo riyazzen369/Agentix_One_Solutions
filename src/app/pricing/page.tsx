@@ -11,6 +11,8 @@ import { FAQ } from "@/components/FAQ";
 import { CTASection } from "@/components/CTASection";
 import { JsonLd } from "@/components/JsonLd";
 import { TrustStrip } from "@/components/TrustStrip";
+import { getContent } from "@/lib/site-content";
+import { applyAppPlan, applyTables, applyWebsitePlans } from "@/lib/pricing-overrides";
 
 export const metadata: Metadata = pageMeta({
   title: "Pricing — Websites, AI Chatbots & Automation Plans",
@@ -18,7 +20,11 @@ export const metadata: Metadata = pageMeta({
   path: "/pricing",
 });
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const { pricing } = await getContent();
+  const plans = applyWebsitePlans(websitePlans, pricing);
+  const app = applyAppPlan(appPlan, pricing);
+  const tables = applyTables(priceTables, pricing);
   return (
     <>
       <PageHeader eyebrow="Pricing" title="Simple pricing. No hidden costs." text={`${PRICE_NOTE} GST and third-party costs are extra — see the notes below.`} />
@@ -26,7 +32,7 @@ export default function PricingPage() {
       <section aria-labelledby="web-plans" className="container py-16 sm:py-20">
         <SectionHeading id="web-plans" eyebrow="Websites" title="Choose your website building plan" text="Get your business online and ready to grow." />
         <div className="mt-12 grid items-start gap-6 lg:grid-cols-3">
-          {websitePlans.map((p) => <WebsitePlanCard key={p.name} plan={p} />)}
+          {plans.map((p) => <WebsitePlanCard key={p.name} plan={p} />)}
         </div>
         <div data-reveal className="mt-10 rounded-brut border-2 border-ink bg-alabaster p-5 shadow-brut-sm sm:p-6">
           <h3 className="font-display text-lg font-bold">Separately billable &amp; renewals</h3>
@@ -39,11 +45,11 @@ export default function PricingPage() {
       <section aria-labelledby="app-plan" className="border-y-2 border-ink bg-alabaster">
         <div className="container grid items-center gap-10 py-16 sm:py-20 lg:grid-cols-2">
           <SectionHeading id="app-plan" eyebrow="Apps" title="App development" text="Android or iOS apps for bookings, memberships, internal tools and customer portals — scoped clearly before we build." />
-          <PricingCard plan={appPlan} service="Website & App Development" />
+          <PricingCard plan={app} service="Website & App Development" />
         </div>
       </section>
 
-      {priceTables.map((t) => {
+      {tables.map((t) => {
         const id = t.title.toLowerCase().replace(/\W+/g, "-");
         return (
           <section key={t.title} aria-labelledby={id} className="container py-14">

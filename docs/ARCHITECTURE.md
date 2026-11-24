@@ -24,6 +24,7 @@ Browser ──► Vercel CDN (static pages, fonts, images)
 | `/sow-legal` | `sow-legal/page.tsx` | SOW overview, what every SOW covers, links to legal pages |
 | `/client-agreement` | `client-agreement/page.tsx` | MSA, 3 required sign-offs, key commitments, onboarding checklist, billing transparency, print button |
 | `/client-sign-off` | `client-sign-off/page.tsx` | Read the MSA, SOW terms and Data & Platform Compliance Acknowledgement and accept all three online (no login, `noindex`, linked from `/client-agreement`) |
+| `/admin`, `/admin/login` | `admin/*` | Private owner page: edit prices, set an offer banner, view and download signed agreements (`noindex`, blocked in robots.txt) |
 | `/sow-template` | `sow-template/page.tsx` | Blank Statement of Work template |
 | `/contact` | `contact/page.tsx` | Lead form, WhatsApp, email, phone, address, hours, LinkedIn, quick service links |
 | `/contact/thank-you` | `contact/thank-you/page.tsx` | Result page for no-JavaScript form posts (`noindex`) |
@@ -108,6 +109,18 @@ Records a client's acceptance of the three agreements. No client login and no li
 - **Google Sheet:** when copying records into the Drive sheet, use the column **"Business address or place"** for `address_or_place`.
 
 No secrets are hard-coded anywhere; all come from environment variables.
+
+### Admin (`/admin`)
+
+Private page for the owner. Three tabs: **Pricing**, **Offers**, **Signed agreements**.
+
+- **Sign-in:** the owner's email + password from Supabase Auth. `POST /api/admin/login` exchanges them with Supabase on the server; the tokens are kept only in `httpOnly`, `SameSite=Strict` cookies (`agx_at` 1 hour, `agx_rt` 7 days) and are never exposed to browser JavaScript. An expired access token is refreshed automatically (`/api/admin/refresh`). Login is rate limited (8 / 10 min per IP) and only `ADMIN_EMAIL` is accepted. Every admin route re-verifies the session with Supabase and checks the email; state-changing requests also require a same-origin request.
+- **Database enforcement:** row-level security allows only the owner's email to write `site_content` or read/delete `client_signoffs` (`supabase/migrations/20261125_*`). Public visitors can read `site_content` only.
+- **Pricing tab:** every price on the site has a stable id (`lib/pricing-overrides.ts`: website plans and estimates, app, chatbot / automation / retainer tables, Services and AI Automations page "starting price" lines). Saved values override the defaults in `src/content/*`; only values that differ from the defaults are stored, and the reset arrow restores a default. Edit features, plan descriptions and policy text in the code files (`src/content/pricing.ts`).
+- **Offers tab:** one site-wide banner (`components/OfferBanner.tsx`, rendered in `layout.tsx`) with message, optional button (relative link or https URL only) and optional end date (India time). It hides itself after the end date.
+- **Signed agreements tab:** latest 1,000 records, plus **Download CSV** (`/api/admin/signoffs-csv`, all records, Excel-friendly with BOM, times in IST, formula-safe). Columns: Reference, Signed at (IST), Name, WhatsApp, Business address or place, four acceptance columns, Signature method, Agreement version, Agreement hash.
+- **How changes reach the site:** content is read from Supabase with a 60-second cache; saving in the admin also clears the cache immediately for Home, Pricing, Services and AI Automations. If Supabase is unreachable the site falls back to the defaults in code.
+- **One-time setup:** create the admin user in Supabase (Authentication → Users → Add user, tick *Auto Confirm User*) and turn off *Allow new users to sign up*. See `docs/DEPLOYMENT.md`.
 
 ## Libraries (`package.json`)
 
