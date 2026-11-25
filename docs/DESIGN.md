@@ -53,7 +53,7 @@ Hexagon built from a purple **"A"** and a white **"1"**, with a wordmark **AGENT
 
 ## Hero robot
 
-`HeroCenterpiece.tsx` — a CSS-3D alien robot built from cuboids (lavender with lighter/darker faces), neon-blue glowing antennae, slanted blinking eyes and a pulsing chest core. The head turns toward the cursor / finger (smoothed with a small animation-frame loop); the body sways and bobs. Tapping it triggers three haptic pulses on Android phones, a shake and a speech bubble (see `docs/ARCHITECTURE.md`). Six floating cards (AI Chat, Workflow Automation, LinkedIn Outreach, Payment Follow-Up, Content Automation, Cold Call Agent) drift with depth-based parallax. In reduced-motion mode the robot is a still pose.
+`HeroCenterpiece.tsx` — a CSS-3D alien robot built from cuboids (lavender with lighter/darker faces), neon-blue glowing antennae, slanted blinking eyes and a pulsing chest core. The head turns toward the cursor / finger (smoothed with a small animation-frame loop); the body sways and bobs. Tapping it plays a three-scene "poke" story: haptics on Android, shake, speech bubble, a purple heart balloon that bursts, and fun pop-ups (see `docs/ARCHITECTURE.md`). Six floating cards (AI Chat, Workflow Automation, LinkedIn Outreach, Payment Follow-Up, Content Automation, Cold Call Agent) drift with depth-based parallax. In reduced-motion mode the robot is a still pose.
 
 ## Responsive behaviour
 

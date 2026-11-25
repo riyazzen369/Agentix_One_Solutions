@@ -6,7 +6,7 @@
 - Scroll reveal = `data-reveal` attribute + `RevealObserver` (content stays visible without JS / with reduced motion).
 - Lead CTAs use `LeadButton` (opens modal, falls back to `/contact#lead-form`).
 - Logo geometry lives in `src/lib/logo-paths.ts` (used by `LogoMark`, favicon, share image).
-- Hero robot (`HeroCenterpiece.tsx`): tap → vibrate [70,45,70,45,70] (Android only) + shake + typed speech bubble. No animation library (Framer Motion removed); keep the lead form lazy-loaded.
+- Hero robot (`HeroCenterpiece.tsx` + `RobotCompanion.tsx`): 3-scene tap story (1: 3 pulses + "How can I help you moron→sir!"; 2: no vibration, shy message, heart balloon bursts, WhatsApp pop-up; 3: 3 s vibration, "don't poke me", joke report pop-up). Vibration is Android-only. No animation library (Framer Motion removed); keep the lead form lazy-loaded.
 - Fonts: `next/font/local` latin files + tiny ₹ subsets in `src/app/fonts/`.
 - Motion: page fade via `app/template.tsx`, CSS scroll-progress bar, staggered reveals; all disabled under prefers-reduced-motion.
 - Keep prices/policy wording identical across `site.ts`, `pricing.ts`, `legal.ts`, `agreement.ts`.

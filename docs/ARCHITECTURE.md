@@ -55,16 +55,21 @@ Every "Book free call / Get a free AI growth plan / pricing CTA" uses `LeadButto
 
 Form fields (all required): name, business name, WhatsApp number, email, business type, service needed, monthly budget range, message.
 
-### Hero robot interaction
+### Hero robot interaction (the "poke" story)
 
-Tapping (or pressing Enter on) the robot — an invisible button over it in `HeroCenterpiece.tsx`:
+Tapping (or pressing Enter on) the robot — an invisible button over it in `HeroCenterpiece.tsx`; the story logic is in `RobotCompanion.tsx` (`useRobotCompanion` + `RobotOverlay`). Each tap, **after the previous message was closed**, moves to the next scene; a 4th tap starts again from scene 1. Taps while a scene is still on screen only wiggle the robot.
 
-1. **Haptics:** `navigator.vibrate([70, 45, 70, 45, 70])` = three short pulses. Works on Android browsers (Chrome, Samsung Internet, Firefox). **iPhones/Safari do not support web vibration**, and some phones disable it in system settings; the visual reaction still happens everywhere.
-2. **Reaction:** the robot shakes (`anim-shake`, skipped under reduced motion).
-3. **Speech bubble:** types *"How can I help you moron"*, pauses 0.9 s, deletes *moron*, immediately types *sir!* → **"How can I help you sir!"**, then shows *Book free call* and *WhatsApp* buttons. It closes after 10 s or with ×. Screen readers get one polite announcement of the final text instead of every typed letter.
-4. A "Tap the robot" hint pill shows until the first tap.
+| Tap | Haptics | What happens |
+|---|---|---|
+| 1 | 3 short pulses `[70,45,70,45,70]` | Robot shakes; speech bubble opens at once and types *"How can I help you moron"*, pauses 0.9 s, deletes *moron*, retypes *sir!* → **"How can I help you sir!"**, then *Book free call* / *WhatsApp* buttons |
+| 2 | **none** | Bubble types *"I think you are impressed by my charm 😊 Ping me now on WhatsApp, we can talk more."* → a transparent purple heart inflates like a balloon for 2 s → bursts (ring + particles) → centred **WhatsApp pop-up** ("You got a heart!", *Ping on WhatsApp 💬* / *Maybe later*) |
+| 3 | **one long 3 s vibration** `vibrate(3000)` | Robot shakes for 3 s while the bubble types *"Hey moron, don't keep on poking me! I will report your harassment to my master."* → joke **"Harassment report filed" pop-up** (clearly labelled as a joke) with *I'm sorry 🙏* (robot replies "Apology accepted, sir. 🤝") and *Talk to my master* (WhatsApp) |
 
-To change the wording, edit `BASE`, the `"moron"` / `"sir!"` strings in `speak()`, and the screen-reader text in `HeroCenterpiece.tsx`.
+Notes:
+- **Vibration works on Android browsers only** (Chrome, Samsung Internet, Firefox). iPhones/Safari do not support web vibration, and some phones disable it in system settings; the visual story works everywhere. Closing a message cancels any running vibration (`vibrate(0)`).
+- Pop-ups are native modal `<dialog>`s: centred on screen, focus kept inside, Esc or tapping outside closes. Messages type out with emoji kept whole; screen readers get one polite announcement per scene instead of every letter.
+- Under reduced motion: no shake, the heart is shown still for 2 s, no burst; typing and pop-ups still work.
+- To change wording or timing, edit the strings and `sleep()` values in `run()` in `RobotCompanion.tsx`.
 
 ### Motion
 

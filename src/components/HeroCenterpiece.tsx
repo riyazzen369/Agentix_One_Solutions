@@ -1,10 +1,8 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { X } from "lucide-react";
-import { whatsappHref, type IconName } from "@/content/site";
-import { buttonClass } from "./Button";
+import { useEffect, useRef } from "react";
+import type { IconName } from "@/content/site";
 import { Icon } from "./Icon";
-import { LeadButton } from "./LeadModal";
+import { RobotOverlay, useRobotCompanion } from "./RobotCompanion";
 
 const chips: { icon: IconName; label: string; status: string; pos: string; depth: number; delay: string }[] = [
   { icon: "bot", label: "AI Chat", status: "Lead qualified", pos: "left-0 top-[4%]", depth: 1.4, delay: "0s" },
@@ -15,20 +13,12 @@ const chips: { icon: IconName; label: string; status: string; pos: string; depth
   { icon: "phone", label: "Cold Call Agent", status: "Meeting booked", pos: "right-[4%] bottom-[8%]", depth: 1.5, delay: "-1.8s" },
 ];
 
-const BASE = "How can I help you ";
-const VIBRATE_PATTERN = [70, 45, 70, 45, 70]; // three short pulses
-
 export function HeroCenterpiece() {
   const box = useRef<HTMLDivElement>(null);
   const tilt = useRef<HTMLDivElement>(null);
   const head = useRef<HTMLDivElement>(null);
   const chipEls = useRef<(HTMLDivElement | null)[]>([]);
-  const runId = useRef(0);
-  const [text, setText] = useState("");
-  const [open, setOpen] = useState(false);
-  const [done, setDone] = useState(false);
-  const [shaking, setShaking] = useState(false);
-  const [tapped, setTapped] = useState(false);
+  const bot = useRobotCompanion();
 
   // Pointer / touch following: one lightweight animation loop, no animation library.
   useEffect(() => {
@@ -88,41 +78,6 @@ export function HeroCenterpiece() {
     };
   }, []);
 
-  useEffect(() => () => { runId.current += 1; }, []);
-
-  const speak = useCallback(async () => {
-    const id = ++runId.current;
-    const alive = () => runId.current === id;
-    const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
-    setOpen(true);
-    setDone(false);
-    setText("");
-    for (let i = 1; i <= BASE.length + 5 && alive(); i++) { setText((BASE + "moron").slice(0, i)); await wait(48); } // types "…moron"
-    await wait(900); // pause
-    for (let i = 4; i >= 0 && alive(); i--) { setText(BASE + "moron".slice(0, i)); await wait(85); } // deletes "moron"
-    for (let i = 1; i <= 4 && alive(); i++) { setText(BASE + "sir!".slice(0, i)); await wait(95); } // retypes "sir!"
-    if (!alive()) return;
-    setDone(true);
-    await wait(10000);
-    if (alive()) setOpen(false);
-  }, []);
-
-  const onTap = () => {
-    // Three haptic pulses on phones that allow it (Android browsers). iPhones do not support web vibration.
-    try {
-      if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate(VIBRATE_PATTERN);
-    } catch {
-      /* vibration blocked: carry on with the visual reaction */
-    }
-    setTapped(true);
-    setShaking(false);
-    requestAnimationFrame(() => setShaking(true));
-    window.setTimeout(() => setShaking(false), 600);
-    void speak();
-  };
-
-  const close = () => { runId.current += 1; setOpen(false); };
-
   return (
     <div ref={box} className="relative mx-auto aspect-square w-full max-w-[min(560px,100%)] [perspective:1100px]">
       <div
@@ -141,7 +96,7 @@ export function HeroCenterpiece() {
               <span className="absolute -bottom-2 left-1/2 h-3.5 w-3.5 -translate-x-1/2 rounded-full border-2 border-ink bg-lavender" />
             </div>
           </div>
-          <Robot headRef={head} shaking={shaking} />
+          <Robot headRef={head} shake={bot.shake} />
         </div>
 
         {chips.map((c, i) => (
@@ -164,37 +119,20 @@ export function HeroCenterpiece() {
 
       {/* Tap target over the robot (keyboard accessible) */}
       <button
+        ref={bot.tapButton}
         type="button"
-        onClick={onTap}
+        onClick={bot.onTap}
         aria-label="Tap the robot to say hello"
         className="absolute inset-x-[28%] bottom-[10%] top-[8%] z-[2] cursor-pointer rounded-[40%] focus-visible:outline-4 focus-visible:outline-ink [-webkit-tap-highlight-color:transparent]"
       />
 
-      {!tapped && (
+      {!bot.tapped && (
         <span aria-hidden className="pointer-events-none absolute bottom-[1%] left-1/2 z-[4] -translate-x-1/2 whitespace-nowrap rounded-full border-2 border-ink bg-lemon px-3 py-1 font-display text-[11px] font-bold uppercase tracking-[0.14em] shadow-brut-sm">
           <span className="anim-bob inline-block">Tap the robot</span>
         </span>
       )}
 
-      {open && (
-        <div className="absolute left-1/2 top-[-1%] z-20 w-[min(300px,88%)] -translate-x-1/2 rounded-brut border-2 border-ink bg-white p-3 pr-9 shadow-brut">
-          <p aria-live="off" className="min-h-[1.6rem] font-display text-[17px] font-bold leading-snug">
-            {text}
-            {!done && <span aria-hidden className="caret ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[3px] bg-ink" />}
-          </p>
-          <p className="sr-only" aria-live="polite">{done ? "The robot says: How can I help you sir!" : ""}</p>
-          {done && (
-            <div className="mt-3 flex gap-2">
-              <LeadButton className={buttonClass("primary", "min-h-[44px] flex-1 px-2 py-2 text-xs")}>Book free call</LeadButton>
-              <a href={whatsappHref()} target="_blank" rel="noopener noreferrer" className={buttonClass("secondary", "min-h-[44px] flex-1 px-2 py-2 text-xs")}>WhatsApp</a>
-            </div>
-          )}
-          <button type="button" onClick={close} aria-label="Close message" className="absolute right-1.5 top-1.5 grid h-8 w-8 place-items-center rounded-md border-2 border-ink bg-lemon hover:bg-mint">
-            <X aria-hidden className="h-4 w-4" />
-          </button>
-          <span aria-hidden className="absolute -bottom-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-b-2 border-r-2 border-ink bg-white" />
-        </div>
-      )}
+      <RobotOverlay bot={bot} />
     </div>
   );
 }
@@ -235,13 +173,13 @@ function Eye({ side }: { side: -1 | 1 }) {
   );
 }
 
-function Robot({ headRef, shaking }: { headRef: React.RefObject<HTMLDivElement | null>; shaking: boolean }) {
+function Robot({ headRef, shake }: { headRef: React.RefObject<HTMLDivElement | null>; shake: string }) {
   return (
     <div
       className="absolute left-1/2 top-1/2 h-[390px] w-[240px] [--k:0.66] [transform-style:preserve-3d] sm:[--k:0.9] lg:[--k:1]"
       style={{ transform: "translate(-50%,-50%) scale(var(--k)) translateZ(30px)" }}
     >
-      <div className={`absolute inset-0 [transform-style:preserve-3d] ${shaking ? "anim-shake" : ""}`}>
+      <div className={`absolute inset-0 [transform-style:preserve-3d] ${shake}`}>
         <div className="anim-bob absolute inset-0 pt-[50px] [transform-style:preserve-3d]">
           <div className="anim-sway absolute inset-x-0 bottom-0 top-[50px] [transform-style:preserve-3d] [transform:rotateX(-8deg)_rotateY(-22deg)]">
             {/* head + antennae track the pointer */}
