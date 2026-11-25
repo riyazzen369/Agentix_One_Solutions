@@ -1,9 +1,11 @@
 "use client";
-import { createContext, useCallback, useContext, useRef, useState, type ReactNode, type MouseEvent } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode, type MouseEvent } from "react";
 import { usePathname } from "next/navigation";
 import { X } from "lucide-react";
-import { ContactForm } from "./ContactForm";
+import dynamic from "next/dynamic";
 import { LEAD_HREF } from "@/content/site";
+
+const ContactForm = dynamic(() => import("./ContactForm").then((m) => m.ContactForm), { ssr: false, loading: () => <p className="py-6 text-sm text-slate">Loading form…</p> });
 
 const Ctx = createContext<(service?: string) => void>(() => {});
 export const useLeadModal = () => useContext(Ctx);
@@ -12,10 +14,18 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDialogElement>(null);
   const [service, setService] = useState<string | undefined>();
   const [key, setKey] = useState(0);
+  const [opened, setOpened] = useState(false);
+
+  // Fetch the form code in the background once the page has settled, so the first tap feels instant.
+  useEffect(() => {
+    const t = window.setTimeout(() => void import("./ContactForm"), 4000);
+    return () => window.clearTimeout(t);
+  }, []);
 
   const open = useCallback((s?: string) => {
     setService(s);
     setKey((k) => k + 1);
+    setOpened(true);
     ref.current?.showModal();
   }, []);
 
@@ -39,7 +49,7 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
               <X aria-hidden className="h-5 w-5" />
             </button>
           </div>
-          <ContactForm key={key} defaultService={service} compact />
+          {opened && <ContactForm key={key} defaultService={service} compact />}
         </div>
       </dialog>
     </Ctx.Provider>

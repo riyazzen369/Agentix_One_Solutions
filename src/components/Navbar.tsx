@@ -37,7 +37,7 @@ export function Navbar() {
   const active = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className="sticky top-0 z-40 border-b-2 border-ink bg-lemon/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-40 border-b-2 border-ink bg-lemon">
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-lemon">
         Skip to content
       </a>

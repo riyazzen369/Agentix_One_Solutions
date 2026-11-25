@@ -27,7 +27,7 @@ export default async function AutomationsPage() {
       </PageHeader>
       <div className="container grid gap-6 py-16 sm:py-20 lg:grid-cols-2">
         {list.map((a, i) => (
-          <article key={a.title} data-reveal aria-labelledby={`auto-${i}`} className="card card-hover flex flex-col p-6 sm:p-8">
+          <article key={a.title} data-reveal aria-labelledby={`auto-${i}`} className="cv-auto card card-hover flex flex-col p-6 sm:p-8">
             <div className="flex items-start justify-between gap-4">
               <span className="grid h-12 w-12 place-items-center rounded-xl border-2 border-ink bg-lemon"><Icon name={a.icon} className="h-6 w-6" /></span>
               <Badge tone="ink">{a.price}</Badge>

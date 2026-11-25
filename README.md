@@ -22,7 +22,7 @@ Everything needed to rebuild the site from scratch is in this repo: code, conten
 
 ## Tech stack
 
-Next.js 15 (App Router) · React 19 · TypeScript 5 · Tailwind CSS 3.4 · Framer Motion · Lucide icons · React Hook Form + Zod · Resend (email) and Supabase (client sign-off records), both via REST APIs · Fonts: Space Grotesk + Inter (self-hosted via Fontsource) · Hosted on Vercel.
+Next.js 15 (App Router) · React 19 · TypeScript 5 · Tailwind CSS 3.4 · Lucide icons · React Hook Form + Zod · Resend (email) and Supabase (client sign-off records), both via REST APIs · Fonts: Space Grotesk + Inter (self-hosted, preloaded with `next/font/local`) · Hosted on Vercel.
 
 ## Rebuild the site locally
 

@@ -55,9 +55,20 @@ Every "Book free call / Get a free AI growth plan / pricing CTA" uses `LeadButto
 
 Form fields (all required): name, business name, WhatsApp number, email, business type, service needed, monthly budget range, message.
 
+### Hero robot interaction
+
+Tapping (or pressing Enter on) the robot — an invisible button over it in `HeroCenterpiece.tsx`:
+
+1. **Haptics:** `navigator.vibrate([70, 45, 70, 45, 70])` = three short pulses. Works on Android browsers (Chrome, Samsung Internet, Firefox). **iPhones/Safari do not support web vibration**, and some phones disable it in system settings; the visual reaction still happens everywhere.
+2. **Reaction:** the robot shakes (`anim-shake`, skipped under reduced motion).
+3. **Speech bubble:** types *"How can I help you moron"*, pauses 0.9 s, deletes *moron*, immediately types *sir!* → **"How can I help you sir!"**, then shows *Book free call* and *WhatsApp* buttons. It closes after 10 s or with ×. Screen readers get one polite announcement of the final text instead of every typed letter.
+4. A "Tap the robot" hint pill shows until the first tap.
+
+To change the wording, edit `BASE`, the `"moron"` / `"sir!"` strings in `speak()`, and the screen-reader text in `HeroCenterpiece.tsx`.
+
 ### Motion
 
-- Page fade (`template.tsx`), scroll-reveal with staggered delays (`RevealObserver`, `data-reveal` attribute), CSS scroll-progress bar, hero robot (CSS 3D + Framer Motion), neon pulse, blink, floating cards, flow-line animations.
+- Page fade (`template.tsx`), scroll-reveal with staggered delays (`RevealObserver`, `data-reveal` attribute), CSS scroll-progress bar, hero robot (CSS 3D, pointer-follow via a small `requestAnimationFrame` loop, no animation library), neon pulse, blink, floating cards, flow-line animations. The hero's endless animations pause while it is scrolled out of view (`.hero-paused`).
 - **Everything respects `prefers-reduced-motion`.** Reveal hiding only applies when JavaScript has run and motion is allowed, so content is visible without JavaScript.
 
 ### SEO
@@ -122,8 +133,21 @@ Private page for the owner. Three tabs: **Pricing**, **Offers**, **Signed agreem
 - **How changes reach the site:** content is read from Supabase with a 60-second cache; saving in the admin also clears the cache immediately for Home, Pricing, Services and AI Automations. If Supabase is unreachable the site falls back to the defaults in code.
 - **One-time setup:** create the admin user in Supabase (Authentication → Users → Add user, tick *Auto Confirm User*) and turn off *Allow new users to sign up*. See `docs/DEPLOYMENT.md`.
 
+## Performance notes
+
+Measured with Lighthouse (mobile, simulated slow 4G, production build): Performance **99 home / 96 pricing / 97 services / 96 contact**; Accessibility, Best Practices and SEO 100; CLS ≈ 0. What keeps it fast:
+
+- No animation library: the hero uses a tiny `requestAnimationFrame` loop (Framer Motion was removed, about 85 KB less JavaScript on the home page).
+- The lead form (React Hook Form + Zod) is loaded on demand: fetched in the background 4 s after load and mounted on first open (`LeadModal.tsx`).
+- Fonts: Inter and Space Grotesk latin files are preloaded by `next/font/local` (`layout.tsx`). The ₹ sign comes from 1 KB ₹-only files in `src/app/fonts/` that load only on pages showing a price (`unicode-range`). Regenerate them with `pyftsubset <latin-ext woff2> --unicodes=U+20B9 --flavor=woff2`.
+- `content-visibility: auto` on below-the-fold sections and long cards (`.page-enter > section`, `.cv-auto` in `globals.css`) skips layout and paint until they are near the viewport.
+- Compositor-only animations (transform/opacity) for the pulsing flow nodes; no `backdrop-filter` on the header.
+- Admin-edited prices are cached for 60 s and refreshed instantly on save.
+
+Re-test after big changes: `npm run build`, start with `npm start`, then `npx lighthouse http://localhost:3000 --only-categories=performance`.
+
 ## Libraries (`package.json`)
 
-`next`, `react`, `react-dom`, `framer-motion`, `lucide-react`, `react-hook-form`, `@hookform/resolvers`, `zod`, `@fontsource-variable/space-grotesk`, `@fontsource-variable/inter`. Dev: `typescript` 5, `tailwindcss` 3.4, `postcss`, `autoprefixer`, `eslint` 9 with `eslint-config-next`.
+`next`, `react`, `react-dom`, `lucide-react`, `react-hook-form`, `@hookform/resolvers`, `zod`, `@fontsource-variable/space-grotesk`, `@fontsource-variable/inter`. Dev: `typescript` 5, `tailwindcss` 3.4, `postcss`, `autoprefixer`, `eslint` 9 with `eslint-config-next`.
 
 Notes: TypeScript is pinned to major 5 because TypeScript 6 broke the Next 15 build. Lucide has no LinkedIn icon, so a "network" icon is used for the LinkedIn services.

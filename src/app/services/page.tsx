@@ -32,7 +32,7 @@ export default async function ServicesPage() {
       </nav>
       <div className="container space-y-10 py-16 sm:py-20">
         {list.map((s, i) => (
-          <section key={s.slug} id={s.slug} aria-labelledby={`${s.slug}-title`} data-reveal className="card grid gap-8 p-6 sm:p-10 lg:grid-cols-[1.1fr_1fr]">
+          <section key={s.slug} id={s.slug} aria-labelledby={`${s.slug}-title`} data-reveal className="cv-auto card grid gap-8 p-6 sm:p-10 lg:grid-cols-[1.1fr_1fr]">
             <div>
               <div className="flex items-center gap-3">
                 <span className="grid h-12 w-12 place-items-center rounded-xl border-2 border-ink bg-lemon"><Icon name={s.icon} className="h-6 w-6" /></span>

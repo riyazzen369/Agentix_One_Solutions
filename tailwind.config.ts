@@ -15,8 +15,8 @@ const config: Config = {
         neon: "#2FD8FF",
       },
       fontFamily: {
-        display: ['"Space Grotesk Variable"', "system-ui", "sans-serif"],
-        sans: ['"Inter Variable"', "system-ui", "sans-serif"],
+        display: ["var(--font-grotesk)", '"Grotesk Rupee"', "system-ui", "sans-serif"],
+        sans: ["var(--font-inter)", '"Inter Rupee"', "system-ui", "sans-serif"],
       },
       boxShadow: {
         brut: "4px 4px 0 0 #171717",

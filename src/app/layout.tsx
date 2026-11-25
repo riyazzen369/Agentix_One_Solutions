@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/space-grotesk";
-import "@fontsource-variable/inter";
+import localFont from "next/font/local";
 import "./globals.css";
 import { site } from "@/content/site";
 import { Navbar } from "@/components/Navbar";
@@ -11,6 +10,21 @@ import { RevealObserver } from "@/components/RevealObserver";
 import { JsonLd } from "@/components/JsonLd";
 import { OfferBanner } from "@/components/OfferBanner";
 import { organizationLd, websiteLd } from "@/lib/seo";
+
+// Latin text fonts are preloaded by Next. The rupee sign (₹) is not in the latin subset, so it comes from
+// tiny ₹-only files that the browser fetches only on pages that show a price.
+const inter = localFont({
+  src: "../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2",
+  weight: "100 900",
+  variable: "--font-inter",
+  display: "swap",
+});
+const grotesk = localFont({
+  src: "../../node_modules/@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2",
+  weight: "300 700",
+  variable: "--font-grotesk",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -27,7 +41,7 @@ export const viewport: Viewport = { themeColor: "#FFF21A", width: "device-width"
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" suppressHydrationWarning>
+    <html lang="en-IN" suppressHydrationWarning className={`${inter.variable} ${grotesk.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>

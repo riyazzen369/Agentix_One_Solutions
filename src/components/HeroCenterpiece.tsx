@@ -1,8 +1,10 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from "framer-motion";
-import type { IconName } from "@/content/site";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { X } from "lucide-react";
+import { whatsappHref, type IconName } from "@/content/site";
+import { buttonClass } from "./Button";
 import { Icon } from "./Icon";
+import { LeadButton } from "./LeadModal";
 
 const chips: { icon: IconName; label: string; status: string; pos: string; depth: number; delay: string }[] = [
   { icon: "bot", label: "AI Chat", status: "Lead qualified", pos: "left-0 top-[4%]", depth: 1.4, delay: "0s" },
@@ -13,80 +15,187 @@ const chips: { icon: IconName; label: string; status: string; pos: string; depth
   { icon: "phone", label: "Cold Call Agent", status: "Meeting booked", pos: "right-[4%] bottom-[8%]", depth: 1.5, delay: "-1.8s" },
 ];
 
-export function HeroCenterpiece() {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const px = useMotionValue(0);
-  const py = useMotionValue(0);
-  const sx = useSpring(px, { stiffness: 80, damping: 18 });
-  const sy = useSpring(py, { stiffness: 80, damping: 18 });
-  const rotateY = useTransform(sx, [-1, 1], [-14, 14]);
-  const rotateX = useTransform(sy, [-1, 1], [10, -10]);
+const BASE = "How can I help you ";
+const VIBRATE_PATTERN = [70, 45, 70, 45, 70]; // three short pulses
 
+export function HeroCenterpiece() {
+  const box = useRef<HTMLDivElement>(null);
+  const tilt = useRef<HTMLDivElement>(null);
+  const head = useRef<HTMLDivElement>(null);
+  const chipEls = useRef<(HTMLDivElement | null)[]>([]);
+  const runId = useRef(0);
+  const [text, setText] = useState("");
+  const [open, setOpen] = useState(false);
+  const [done, setDone] = useState(false);
+  const [shaking, setShaking] = useState(false);
+  const [tapped, setTapped] = useState(false);
+
+  // Pointer / touch following: one lightweight animation loop, no animation library.
   useEffect(() => {
-    if (reduce) return;
-    const move = (x: number, y: number) => {
-      const r = ref.current?.getBoundingClientRect();
-      if (!r) return;
-      px.set(Math.max(-1, Math.min(1, ((x - r.left) / r.width) * 2 - 1)));
-      py.set(Math.max(-1, Math.min(1, ((y - r.top) / r.height) * 2 - 1)));
+    const el = box.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0, last = 0, visible = true;
+    let px: number | null = null, py: number | null = null;
+
+    const apply = () => {
+      if (tilt.current) tilt.current.style.transform = `rotateX(${(cy * -10).toFixed(2)}deg) rotateY(${(cx * 14).toFixed(2)}deg)`;
+      if (head.current) head.current.style.transform = `rotateX(${(cy * -12).toFixed(2)}deg) rotateY(${(cx * 22).toFixed(2)}deg)`;
+      chipEls.current.forEach((c, i) => {
+        if (c) c.style.transform = `translate3d(${(cx * chips[i].depth * 14).toFixed(2)}px,${(cy * chips[i].depth * 12).toFixed(2)}px,0)`;
+      });
     };
-    const onPointer = (e: PointerEvent) => move(e.clientX, e.clientY);
-    const onTouch = (e: TouchEvent) => e.touches[0] && move(e.touches[0].clientX, e.touches[0].clientY);
-    const reset = () => { px.set(0); py.set(0); };
+    const frame = (t: number) => {
+      raf = 0;
+      if (px !== null && py !== null) {
+        const r = el.getBoundingClientRect();
+        tx = Math.max(-1, Math.min(1, ((px - r.left) / r.width) * 2 - 1));
+        ty = Math.max(-1, Math.min(1, ((py - r.top) / r.height) * 2 - 1));
+        px = py = null;
+      }
+      const dt = Math.min(0.05, (t - (last || t)) / 1000);
+      last = t;
+      const k = 1 - Math.exp(-dt / 0.11);
+      cx += (tx - cx) * k;
+      cy += (ty - cy) * k;
+      apply();
+      if (Math.abs(tx - cx) > 0.002 || Math.abs(ty - cy) > 0.002) raf = requestAnimationFrame(frame);
+      else last = 0;
+    };
+    const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+    const point = (x: number, y: number) => { if (!visible) return; px = x; py = y; kick(); };
+    const reset = () => { tx = ty = 0; kick(); };
+    const onPointer = (e: PointerEvent) => point(e.clientX, e.clientY);
+    const onTouch = (e: TouchEvent) => e.touches[0] && point(e.touches[0].clientX, e.touches[0].clientY);
+
+    // Pause the endless CSS animations while the hero is scrolled out of view.
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      el.classList.toggle("hero-paused", !visible);
+    });
+    io.observe(el);
+
     window.addEventListener("pointermove", onPointer, { passive: true });
     window.addEventListener("touchmove", onTouch, { passive: true });
     window.addEventListener("touchend", reset, { passive: true });
     document.addEventListener("pointerleave", reset);
     return () => {
+      io.disconnect();
+      if (raf) cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onPointer);
       window.removeEventListener("touchmove", onTouch);
       window.removeEventListener("touchend", reset);
       document.removeEventListener("pointerleave", reset);
     };
-  }, [reduce, px, py]);
+  }, []);
+
+  useEffect(() => () => { runId.current += 1; }, []);
+
+  const speak = useCallback(async () => {
+    const id = ++runId.current;
+    const alive = () => runId.current === id;
+    const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+    setOpen(true);
+    setDone(false);
+    setText("");
+    for (let i = 1; i <= BASE.length + 5 && alive(); i++) { setText((BASE + "moron").slice(0, i)); await wait(48); } // types "…moron"
+    await wait(900); // pause
+    for (let i = 4; i >= 0 && alive(); i--) { setText(BASE + "moron".slice(0, i)); await wait(85); } // deletes "moron"
+    for (let i = 1; i <= 4 && alive(); i++) { setText(BASE + "sir!".slice(0, i)); await wait(95); } // retypes "sir!"
+    if (!alive()) return;
+    setDone(true);
+    await wait(10000);
+    if (alive()) setOpen(false);
+  }, []);
+
+  const onTap = () => {
+    // Three haptic pulses on phones that allow it (Android browsers). iPhones do not support web vibration.
+    try {
+      if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate(VIBRATE_PATTERN);
+    } catch {
+      /* vibration blocked: carry on with the visual reaction */
+    }
+    setTapped(true);
+    setShaking(false);
+    requestAnimationFrame(() => setShaking(true));
+    window.setTimeout(() => setShaking(false), 600);
+    void speak();
+  };
+
+  const close = () => { runId.current += 1; setOpen(false); };
 
   return (
-    <div ref={ref} role="img" aria-label="3D alien robot with glowing neon-blue antennae, surrounded by automation cards: AI Chat, Workflow Automation, LinkedIn Outreach, Payment Follow-Up, Content Automation and Cold Call Agent" className="relative mx-auto aspect-square w-full max-w-[min(560px,100%)] [perspective:1100px]">
-      <motion.div style={{ rotateX, rotateY }} className="absolute inset-0 [transform-style:preserve-3d]">
-        <div className="absolute inset-[13%] rounded-full border-2 border-ink [transform:rotateX(72deg)] [transform-style:preserve-3d]">
-          <div className="anim-orbit absolute inset-0">
-            <span className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rounded-full border-2 border-ink bg-mint" />
+    <div ref={box} className="relative mx-auto aspect-square w-full max-w-[min(560px,100%)] [perspective:1100px]">
+      <div
+        role="img"
+        aria-label="3D alien robot with glowing neon-blue antennae, surrounded by automation cards: AI Chat, Workflow Automation, LinkedIn Outreach, Payment Follow-Up, Content Automation and Cold Call Agent"
+        className="absolute inset-0"
+      >
+        <div ref={tilt} className="absolute inset-0 [transform-style:preserve-3d]">
+          <div className="absolute inset-[13%] rounded-full border-2 border-ink [transform:rotateX(72deg)] [transform-style:preserve-3d]">
+            <div className="anim-orbit absolute inset-0">
+              <span className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rounded-full border-2 border-ink bg-mint" />
+            </div>
           </div>
-        </div>
-        <div className="absolute inset-[20%] rounded-full border-2 border-dashed border-ink/70 [transform:rotateY(70deg)_rotateX(10deg)]">
-          <div className="anim-orbit-rev absolute inset-0">
-            <span className="absolute -bottom-2 left-1/2 h-3.5 w-3.5 -translate-x-1/2 rounded-full border-2 border-ink bg-lavender" />
+          <div className="absolute inset-[20%] rounded-full border-2 border-dashed border-ink/70 [transform:rotateY(70deg)_rotateX(10deg)]">
+            <div className="anim-orbit-rev absolute inset-0">
+              <span className="absolute -bottom-2 left-1/2 h-3.5 w-3.5 -translate-x-1/2 rounded-full border-2 border-ink bg-lavender" />
+            </div>
           </div>
+          <Robot headRef={head} shaking={shaking} />
         </div>
-        <Robot sx={sx} sy={sy} still={!!reduce} />
-      </motion.div>
 
-      {chips.map((c) => (
-        <Chip key={c.label} {...c} sx={sx} sy={sy} still={!!reduce} />
-      ))}
-    </div>
-  );
-}
-
-function Chip({ icon, label, status, pos, depth, delay, sx, sy, still }: (typeof chips)[number] & { sx: MotionValue<number>; sy: MotionValue<number>; still: boolean }) {
-  const x = useTransform(sx, (v) => (still ? 0 : v * depth * 14));
-  const y = useTransform(sy, (v) => (still ? 0 : v * depth * 12));
-  return (
-    <motion.div style={{ x, y }} className={`absolute ${pos}`}>
-      <div className="anim-bob flex items-center gap-2 rounded-xl border-2 border-ink bg-alabaster px-2.5 py-2 shadow-brut-sm sm:gap-2.5 sm:px-3 sm:shadow-brut" style={{ animationDelay: delay }}>
-        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg border-2 border-ink bg-lemon sm:h-8 sm:w-8">
-          <Icon name={icon} className="h-4 w-4" />
-        </span>
-        <span className="leading-tight">
-          <span className="block font-display text-[11px] font-bold sm:text-[13px]">{label}</span>
-          <span className="hidden items-center gap-1 text-[11px] text-slate sm:flex">
-            <span className="h-1.5 w-1.5 rounded-full bg-mint ring-1 ring-ink" />
-            {status}
-          </span>
-        </span>
+        {chips.map((c, i) => (
+          <div key={c.label} ref={(el) => { chipEls.current[i] = el; }} className={`absolute z-[3] will-change-transform ${c.pos}`}>
+            <div className="anim-bob flex items-center gap-2 rounded-xl border-2 border-ink bg-alabaster px-2.5 py-2 shadow-brut-sm sm:gap-2.5 sm:px-3 sm:shadow-brut" style={{ animationDelay: c.delay }}>
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg border-2 border-ink bg-lemon sm:h-8 sm:w-8">
+                <Icon name={c.icon} className="h-4 w-4" />
+              </span>
+              <span className="leading-tight">
+                <span className="block font-display text-[11px] font-bold sm:text-[13px]">{c.label}</span>
+                <span className="hidden items-center gap-1 text-[11px] text-slate sm:flex">
+                  <span className="h-1.5 w-1.5 rounded-full bg-mint ring-1 ring-ink" />
+                  {c.status}
+                </span>
+              </span>
+            </div>
+          </div>
+        ))}
       </div>
-    </motion.div>
+
+      {/* Tap target over the robot (keyboard accessible) */}
+      <button
+        type="button"
+        onClick={onTap}
+        aria-label="Tap the robot to say hello"
+        className="absolute inset-x-[28%] bottom-[10%] top-[8%] z-[2] cursor-pointer rounded-[40%] focus-visible:outline-4 focus-visible:outline-ink [-webkit-tap-highlight-color:transparent]"
+      />
+
+      {!tapped && (
+        <span aria-hidden className="pointer-events-none absolute bottom-[1%] left-1/2 z-[4] -translate-x-1/2 whitespace-nowrap rounded-full border-2 border-ink bg-lemon px-3 py-1 font-display text-[11px] font-bold uppercase tracking-[0.14em] shadow-brut-sm">
+          <span className="anim-bob inline-block">Tap the robot</span>
+        </span>
+      )}
+
+      {open && (
+        <div className="absolute left-1/2 top-[-1%] z-20 w-[min(300px,88%)] -translate-x-1/2 rounded-brut border-2 border-ink bg-white p-3 pr-9 shadow-brut">
+          <p aria-live="off" className="min-h-[1.6rem] font-display text-[17px] font-bold leading-snug">
+            {text}
+            {!done && <span aria-hidden className="caret ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[3px] bg-ink" />}
+          </p>
+          <p className="sr-only" aria-live="polite">{done ? "The robot says: How can I help you sir!" : ""}</p>
+          {done && (
+            <div className="mt-3 flex gap-2">
+              <LeadButton className={buttonClass("primary", "min-h-[44px] flex-1 px-2 py-2 text-xs")}>Book free call</LeadButton>
+              <a href={whatsappHref()} target="_blank" rel="noopener noreferrer" className={buttonClass("secondary", "min-h-[44px] flex-1 px-2 py-2 text-xs")}>WhatsApp</a>
+            </div>
+          )}
+          <button type="button" onClick={close} aria-label="Close message" className="absolute right-1.5 top-1.5 grid h-8 w-8 place-items-center rounded-md border-2 border-ink bg-lemon hover:bg-mint">
+            <X aria-hidden className="h-4 w-4" />
+          </button>
+          <span aria-hidden className="absolute -bottom-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-b-2 border-r-2 border-ink bg-white" />
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -126,46 +235,46 @@ function Eye({ side }: { side: -1 | 1 }) {
   );
 }
 
-function Robot({ sx, sy, still }: { sx: MotionValue<number>; sy: MotionValue<number>; still: boolean }) {
-  const headY = useTransform(sx, (v) => (still ? 0 : v * 22));
-  const headX = useTransform(sy, (v) => (still ? 0 : v * -12));
+function Robot({ headRef, shaking }: { headRef: React.RefObject<HTMLDivElement | null>; shaking: boolean }) {
   return (
     <div
       className="absolute left-1/2 top-1/2 h-[390px] w-[240px] [--k:0.66] [transform-style:preserve-3d] sm:[--k:0.9] lg:[--k:1]"
       style={{ transform: "translate(-50%,-50%) scale(var(--k)) translateZ(30px)" }}
     >
-      <div className="anim-bob absolute inset-0 pt-[50px] [transform-style:preserve-3d]">
-        <div className="anim-sway absolute inset-x-0 bottom-0 top-[50px] [transform-style:preserve-3d] [transform:rotateX(-8deg)_rotateY(-22deg)]">
-          {/* head + antennae track the pointer */}
-          <motion.div style={{ rotateY: headY, rotateX: headX, transformOrigin: "50% 100%" }} className="absolute inset-x-0 -top-[60px] h-[236px] [transform-style:preserve-3d]">
-            <div className="absolute inset-x-0 top-0 h-[128px]">
-              <Antenna side={-1} />
-              <Antenna side={1} />
+      <div className={`absolute inset-0 [transform-style:preserve-3d] ${shaking ? "anim-shake" : ""}`}>
+        <div className="anim-bob absolute inset-0 pt-[50px] [transform-style:preserve-3d]">
+          <div className="anim-sway absolute inset-x-0 bottom-0 top-[50px] [transform-style:preserve-3d] [transform:rotateX(-8deg)_rotateY(-22deg)]">
+            {/* head + antennae track the pointer */}
+            <div ref={headRef} style={{ transformOrigin: "50% 100%" }} className="absolute inset-x-0 -top-[60px] h-[236px] [transform-style:preserve-3d]">
+              <div className="absolute inset-x-0 top-0 h-[128px]">
+                <Antenna side={-1} />
+                <Antenna side={1} />
+              </div>
+              <Cuboid
+                w={164} h={112} d={112} x={38} y={124}
+                front={
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="flex gap-4"><Eye side={-1} /><Eye side={1} /></div>
+                    <span className="flex gap-1">{[0, 1, 2, 3].map((i) => <span key={i} className="h-[6px] w-[6px] rounded-sm bg-ink" />)}</span>
+                  </div>
+                }
+              />
             </div>
+            <Cuboid w={40} h={18} d={40} x={100} y={176} dark />
             <Cuboid
-              w={164} h={112} d={112} x={38} y={124}
+              w={132} h={98} d={86} x={54} y={192}
               front={
-                <div className="flex flex-col items-center gap-3">
-                  <div className="flex gap-4"><Eye side={-1} /><Eye side={1} /></div>
-                  <span className="flex gap-1">{[0, 1, 2, 3].map((i) => <span key={i} className="h-[6px] w-[6px] rounded-sm bg-ink" />)}</span>
+                <div className="flex flex-col items-center gap-2.5">
+                  <span className="anim-neon h-[30px] w-[30px] rounded-full border-[3px] border-ink bg-neon" style={{ boxShadow: NEON_GLOW }} />
+                  <span className="flex gap-1.5"><span className="h-2 w-5 rounded-full border-2 border-ink bg-mint" /><span className="h-2 w-2 rounded-full border-2 border-ink bg-lemon" /></span>
                 </div>
               }
             />
-          </motion.div>
-          <Cuboid w={40} h={18} d={40} x={100} y={176} dark />
-          <Cuboid
-            w={132} h={98} d={86} x={54} y={192}
-            front={
-              <div className="flex flex-col items-center gap-2.5">
-                <span className="anim-neon h-[30px] w-[30px] rounded-full border-[3px] border-ink bg-neon" style={{ boxShadow: NEON_GLOW }} />
-                <span className="flex gap-1.5"><span className="h-2 w-5 rounded-full border-2 border-ink bg-mint" /><span className="h-2 w-2 rounded-full border-2 border-ink bg-lemon" /></span>
-              </div>
-            }
-          />
-          <Cuboid w={26} h={78} d={26} x={22} y={200} />
-          <Cuboid w={26} h={78} d={26} x={192} y={200} />
+            <Cuboid w={26} h={78} d={26} x={22} y={200} />
+            <Cuboid w={26} h={78} d={26} x={192} y={200} />
+          </div>
+          <div className="absolute bottom-[10px] left-1/2 h-[34px] w-[150px] rounded-[50%] bg-ink/20 [transform:translateX(-50%)_rotateX(75deg)]" />
         </div>
-        <div className="absolute bottom-[10px] left-1/2 h-[34px] w-[150px] rounded-[50%] bg-ink/20 [transform:translateX(-50%)_rotateX(75deg)]" />
       </div>
     </div>
   );
