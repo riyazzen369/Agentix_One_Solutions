@@ -167,18 +167,6 @@ export const services: Service[] = [
     timeline: "1–3 weeks",
     price: "From ₹9,799 setup + ₹3,499/month",
   },
-  {
-    slug: "sow-legal-documentation",
-    icon: "file",
-    title: "SOW & Legal Documentation",
-    short: "Clear Statements of Work, project scope, deliverables, timelines, revision limits, payment terms, IP ownership, confidentiality, and cancellation terms.",
-    what: "Clear, plain-language Statements of Work and project documentation so both sides know exactly what is being delivered.",
-    who: "Every client we work with — and businesses that want clearer scope documents for their own projects.",
-    included: ["Project objective and scope", "Deliverables, timeline and milestones", "Revision and change-request process", "Payment schedule and third-party costs", "IP ownership and confidentiality terms", "Cancellation and support terms"],
-    outcome: "Fewer misunderstandings, clear expectations and smoother projects. (Template documentation — not legal advice.)",
-    timeline: "Included before every project starts",
-    price: "Included with every project · Standalone: [PLACEHOLDER: price]",
-  },
 ];
 
 export type Flow = { title: string; steps: string[] };

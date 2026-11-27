@@ -22,7 +22,7 @@ export default async function ServicesPage() {
   const list = applyServices(services, pricing);
   return (
     <>
-      <PageHeader eyebrow="Services" title="Eight ways to put AI to work in your business" text="Pick one system or combine them. Every engagement starts with a free call and a written scope, so you know exactly what you get and what it costs." />
+      <PageHeader eyebrow="Services" title="Seven ways to put AI to work in your business" text="Pick one system or combine them. Every engagement starts with a free call and a written scope, so you know exactly what you get and what it costs." />
       <nav aria-label="Jump to service" className="border-b-2 border-ink bg-alabaster">
         <ul className="container flex snap-x snap-mandatory scroll-px-4 gap-2 overflow-x-auto py-3 text-sm font-semibold [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {services.map((s) => (

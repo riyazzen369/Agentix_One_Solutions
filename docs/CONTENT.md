@@ -4,7 +4,7 @@ All copy, prices and legal text are **data files**, not hard-coded in pages. Edi
 
 | File | What it controls |
 |---|---|
-| `src/content/site.ts` | Business name, tagline, contact details, hours, LinkedIn link, navigation, 8 services, 6 home flows, 10 automation use cases, process steps, testimonials (placeholders), form options, FAQs |
+| `src/content/site.ts` | Business name, tagline, contact details, hours, LinkedIn link, navigation, 7 services, 6 home flows, 10 automation use cases, process steps, testimonials (placeholders), form options, FAQs |
 | `src/content/pricing.ts` | Website Plans A/B/C, app plan, chatbot / automation / retainer tables, pricing notes |
 | `src/content/legal.ts` | Privacy, Terms, Refund & Cancellation, Cookie, Disclaimer, SOW template, "what every SOW covers" |
 | `src/content/signoff.ts` | Text shown on `/client-sign-off` (Master Service Agreement, Statement of Work, Data & Platform Compliance Acknowledgement), provider, agreement version. Owner-supplied wording, version `2026-11-24 v1`; bump `AGREEMENT_VERSION` whenever the text changes. Note: the SOW names the Godfather Menswear project. |
@@ -24,11 +24,13 @@ Contact values are read from environment variables (`NEXT_PUBLIC_CONTACT_EMAIL`,
 | Business hours | 9:00 AM – 9:00 PM IST (days not specified) |
 | LinkedIn | https://www.linkedin.com/in/mohamed-riyaz-s-8458891b1 (the only social link) |
 
-## Services (8)
+## Services (7)
 
-1. Website & App Development 2. Workflow Agent Automation 3. Social Media Content Automation 4. LinkedIn Automation & Outreach 5. AI Chatbots 6. Cold Call AI Agent 7. Payment Follow-Up Agent 8. SOW & Legal Documentation
+1. Website & App Development 2. Workflow Agent Automation 3. Social Media Content Automation 4. LinkedIn Automation & Outreach 5. AI Chatbots 6. Cold Call AI Agent 7. Payment Follow-Up Agent
 
-Each has: what it is, who it is for, what is included, business outcome, typical timeline, starting price, custom-quote CTA. Timelines other than the website plans are estimates and should be confirmed against delivery capacity.
+SOW and legal documents are **not** a service: they are part of the Terms & Conditions / Client Agreement (`/sow-legal`, `/client-agreement`) that every project is covered by.
+
+Each service has: what it is, who it is for, what is included, business outcome, typical timeline, starting price, custom-quote CTA. Timelines other than the website plans are estimates and should be confirmed against delivery capacity.
 
 ## Pricing (all prices are **starting prices**, GST extra)
 
