@@ -27,7 +27,7 @@ export default function ProcessPage() {
         <LeadButton className={buttonClass("primary")}>Start with a free AI growth call</LeadButton>
       </PageHeader>
       <section className="container py-16 sm:py-20" aria-label="Process steps">
-        <ProcessSteps detailed />
+        <ProcessSteps detailed headingAs="h2" />
       </section>
       <section aria-labelledby="principles" className="border-y-2 border-ink bg-alabaster">
         <div className="container py-16 sm:py-20">

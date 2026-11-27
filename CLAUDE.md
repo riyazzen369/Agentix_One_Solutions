@@ -3,7 +3,7 @@
 - Content is centralized in `src/content/*`; pages in `src/app/*`; reusable UI in `src/components/*`. Full docs in `README.md` and `docs/`.
 - Work directly on `main`; every push auto-deploys to Vercel (https://agentixonesolutions.vercel.app). No PR step.
 - Never invent client names, testimonials, metrics or contact details — use `[PLACEHOLDER]`.
-- Scroll reveal = `data-reveal` attribute + `RevealObserver` (content stays visible without JS / with reduced motion).
+- Scroll reveal = `data-reveal` attribute + `RevealObserver`. The observer hides (`.reveal-hidden`) only elements that start below the fold, so first-paint content / the LCP element is never hidden; content stays visible without JS / with reduced motion. Don't put `data-reveal` on the page `h1`. Keep Lighthouse (mobile) at 100/100/100/100: logo link label must contain its visible text, no skipped heading levels.
 - Lead CTAs use `LeadButton` (opens modal, falls back to `/contact#lead-form`).
 - Logo geometry lives in `src/lib/logo-paths.ts` (used by `LogoMark`, favicon, share image).
 - Hero robot (`HeroCenterpiece.tsx` + `RobotCompanion.tsx`): 3-scene tap story (1: 3 pulses + "How can I help you moron→sir!"; 2: no vibration, shy message, heart balloon bursts, WhatsApp pop-up; 3: 3 s vibration, "don't poke me", joke report pop-up). Vibration is Android-only. No animation library (Framer Motion removed); keep the lead form lazy-loaded.

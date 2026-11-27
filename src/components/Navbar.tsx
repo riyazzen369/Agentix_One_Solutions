@@ -11,12 +11,12 @@ import { cn } from "@/lib/cn";
 
 export function Logo({ className, dark }: { className?: string; dark?: boolean }) {
   return (
-    <Link href="/" className={cn("flex min-h-[44px] items-center gap-3 font-display font-bold uppercase leading-none", className)} aria-label={`${site.name} — home`}>
+    <Link href="/" className={cn("flex min-h-[44px] items-center gap-3 font-display font-bold uppercase leading-none", className)} aria-label={`${site.name} home`}>
       <span aria-hidden className={cn("grid h-11 w-11 shrink-0 place-items-center rounded-xl border-2 border-current bg-[#0B0B10]", dark ? "" : "shadow-brut-sm")}>
         <LogoMark className="h-8 w-8" />
       </span>
       <span className="flex flex-col gap-1">
-        <span className="text-[17px] tracking-[0.14em] sm:text-lg">Agentix</span>
+        <span className="text-[17px] tracking-[0.14em] sm:text-lg">Agentix</span>{" "}
         <span className={cn("text-[9px] font-semibold tracking-[0.34em] sm:text-[10px]", dark && "text-lavender")}>One Solution</span>
       </span>
     </Link>

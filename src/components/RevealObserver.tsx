@@ -5,11 +5,20 @@ import { usePathname } from "next/navigation";
 export function RevealObserver() {
   const pathname = usePathname();
   useEffect(() => {
-    const els = document.querySelectorAll<HTMLElement>("[data-reveal]:not(.revealed)");
+    const all = document.querySelectorAll<HTMLElement>("[data-reveal]:not(.revealed):not(.reveal-hidden)");
     if (!("IntersectionObserver" in window)) {
-      els.forEach((el) => el.classList.add("revealed"));
+      all.forEach((el) => el.classList.add("revealed"));
       return;
     }
+    // Anything already on screen (or above it) stays visible; only content below the fold is hidden and revealed on scroll.
+    const els: HTMLElement[] = [];
+    all.forEach((el) => {
+      if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add("revealed");
+      else {
+        el.classList.add("reveal-hidden");
+        els.push(el);
+      }
+    });
     const io = new IntersectionObserver(
       (entries) =>
         entries

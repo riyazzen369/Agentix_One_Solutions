@@ -5,7 +5,7 @@ type Props = { id?: string; eyebrow?: string; title: ReactNode; text?: ReactNode
 
 export function SectionHeading({ id, eyebrow, title, text, as: H = "h2", align = "left", className }: Props) {
   return (
-    <div data-reveal className={cn("max-w-3xl", align === "center" && "mx-auto text-center", className)}>
+    <div {...(H === "h2" ? { "data-reveal": "" } : {})} className={cn("max-w-3xl", align === "center" && "mx-auto text-center", className)}>
       {eyebrow && <p className="eyebrow mb-4">{eyebrow}</p>}
       <H id={id} className={cn(H === "h1" ? "text-[clamp(2.1rem,7.5vw+0.5rem,4.75rem)]" : "text-[clamp(2.1rem,4vw+0.9rem,3.75rem)]", "break-words uppercase")}>{title}</H>
       {text && <p className="mt-5 max-w-2xl text-lg text-ink/80 sm:text-xl [text-wrap:pretty]" style={align === "center" ? { marginInline: "auto" } : undefined}>{text}</p>}

@@ -27,10 +27,12 @@
   .field[aria-invalid="true"] { @apply border-red-700; }
 }
 
-/* Scroll reveal: only hides content when JS is running and motion is allowed */
+/* Scroll reveal: RevealObserver adds .reveal-hidden only to elements that start below the fold, so anything
+   visible on first paint (and the LCP element) is never hidden. Motion must be allowed. */
 @media (prefers-reduced-motion: no-preference) {
-  .js [data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity 0.45s ease, transform 0.45s ease; }
-  .js [data-reveal].revealed { opacity: 1; transform: none; }
+  [data-reveal] { transition: opacity 0.45s ease, transform 0.45s ease; }
+  [data-reveal].reveal-hidden { opacity: 0; transform: translateY(18px); }
+  [data-reveal].reveal-hidden.revealed { opacity: 1; transform: none; }
 
   @keyframes sway { 0%, 100% { transform: rotateX(-8deg) rotateY(-24deg); } 50% { transform: rotateX(-8deg) rotateY(18deg); } }
   @keyframes neon { 0%, 100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.15); filter: brightness(1.25); } }
@@ -105,5 +107,5 @@ dialog[open] .menu-item { animation: menuIn 0.32s cubic-bezier(0.2, 0.8, 0.2, 1)
   body { background: #fff !important; padding: 0 !important; }
   .dots { background-image: none !important; }
   .card, [data-hl] { box-shadow: none !important; outline: none !important; break-inside: avoid; }
-  .js [data-reveal] { opacity: 1 !important; transform: none !important; }
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
 }

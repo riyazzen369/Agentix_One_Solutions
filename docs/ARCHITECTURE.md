@@ -73,7 +73,7 @@ Notes:
 
 ### Motion
 
-- Page fade (`template.tsx`), scroll-reveal with staggered delays (`RevealObserver`, `data-reveal` attribute), CSS scroll-progress bar, hero robot (CSS 3D, pointer-follow via a small `requestAnimationFrame` loop, no animation library), neon pulse, blink, floating cards, flow-line animations. The hero's endless animations pause while it is scrolled out of view (`.hero-paused`).
+- Page fade (`template.tsx`), scroll-reveal with staggered delays (`RevealObserver`, `data-reveal` attribute; only below-the-fold elements are hidden, so above-the-fold text paints immediately), CSS scroll-progress bar, hero robot (CSS 3D, pointer-follow via a small `requestAnimationFrame` loop, no animation library), neon pulse, blink, floating cards, flow-line animations. The hero's endless animations pause while it is scrolled out of view (`.hero-paused`).
 - **Everything respects `prefers-reduced-motion`.** Reveal hiding only applies when JavaScript has run and motion is allowed, so content is visible without JavaScript.
 
 ### SEO
