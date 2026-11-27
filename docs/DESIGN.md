@@ -49,7 +49,7 @@ Hexagon built from a purple **"A"** and a white **"1"**, with a wordmark **AGENT
 - Geometry is a single source of truth in `src/lib/logo-paths.ts` (viewBox 200×200), used by `LogoMark.tsx`, the favicon, the share image and the exported brand files.
 - Files in `public/brand/`: `agentix-mark.svg` (scalable mark), `agentix-logo-dark.png` and `agentix-logo-yellow.png` (1600×1600 full lockups).
 - In the navbar the mark sits in a dark rounded tile so the white parts stay visible on yellow; in the footer and mobile menu the words are lemon with "ONE SOLUTION" in lavender.
-- The mark was redrawn by hand from the owner's reference (`docs/reference/logo-reference.jpg`) — close, not pixel-identical. Replace `logo-paths.ts` and the brand files if an original vector is supplied.
+- The mark was redrawn by hand from the owner's original reference image (since removed from the repo) — close, not pixel-identical. Replace `logo-paths.ts` and the brand files if an original vector is supplied.
 
 ## Hero robot
 

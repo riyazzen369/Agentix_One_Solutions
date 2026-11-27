@@ -17,7 +17,7 @@ Everything needed to rebuild the site from scratch is in this repo: code, conten
 | [`docs/CONTENT.md`](docs/CONTENT.md) | Where every piece of copy, price and legal text lives, plus the list of open placeholders |
 | `/admin` | Private owner page (sign in with the Supabase admin user): edit prices, run an offer banner, download signed agreements as CSV |
 | [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) | Vercel project settings, environment variables, domains, workflow and troubleshooting |
-| [`docs/reference/`](docs/reference) | Owner-supplied source material: pricing plan image, logo reference, MSA / invoice / onboarding document |
+| [`docs/reference/`](docs/reference) | Owner-supplied source material: MSA / invoice / onboarding document |
 | [`CLAUDE.md`](CLAUDE.md) | Short working notes for AI coding assistants |
 
 ## Tech stack

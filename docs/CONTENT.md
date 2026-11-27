@@ -38,7 +38,7 @@ Each service has: what it is, who it is for, what is included, business outcome,
 
 Standard line shown with prices: *"Starting price. Final quote depends on scope, integrations, and complexity."*
 
-**Website plans** (source: `docs/reference/pricing-plans-reference.png`)
+**Website plans** (source: owner-supplied pricing plan image, since removed; `src/content/pricing.ts` is now the source of truth)
 
 | Plan | Price | Target | Key inclusions | Payments | Admin | Item limit | Est. first-year total* |
 |---|---|---|---|---|---|---|---|
