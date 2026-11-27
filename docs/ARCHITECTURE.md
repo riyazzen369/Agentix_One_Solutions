@@ -53,7 +53,7 @@ Every "Book free call / Get a free AI growth plan / pricing CTA" uses `LeadButto
 3. The form validates with Zod on blur, then POSTs JSON to `/api/contact`.
 4. On success it shows: *"Thanks! Your AI Growth Plan request has been received. Our team will contact you within 24 hours."* (text from `site.contact.responseNote`, confirm before relying on it).
 
-Form fields (all required): name, business name, WhatsApp number, email, business type, service needed, monthly budget range, message.
+Form fields (all required): name, business name, WhatsApp number, email, business type, service needed, preferred call type (phone / WhatsApp / video), previous spend (tick each service already paid for and enter the ₹ amount, or tick "first time"), message.
 
 ### Hero robot interaction (the "poke" story)
 

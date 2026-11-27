@@ -3,27 +3,53 @@ import { useEffect, useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, Loader2 } from "lucide-react";
-import { leadSchema, type Lead } from "@/lib/lead-schema";
+import { leadSchemaChecked, type Lead } from "@/lib/lead-schema";
 import { formOptions, site, whatsappHref, SUCCESS_MSG } from "@/content/site";
 import { buttonClass } from "./Button";
 import { cn } from "@/lib/cn";
 
 
-type FieldName = Exclude<keyof Lead, "website" | "startedAt">;
+type FieldName = Exclude<keyof Lead, "website" | "startedAt" | "previousSpend" | "firstTime">;
+
+const digits = (v: string) => v.replace(/\D/g, "").slice(0, 9);
+const money = (v: string) => (v ? Number(v).toLocaleString("en-IN") : "");
 
 export function ContactForm({ defaultService, compact }: { defaultService?: string; compact?: boolean }) {
   const uid = useId();
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [serverError, setServerError] = useState("");
+  // Previous spend: service -> amount typed (digits only). Order follows the services list.
+  const [spend, setSpend] = useState<Record<string, string>>({});
+  const [firstTime, setFirstTime] = useState(false);
   const {
     register,
     handleSubmit,
     setValue,
     reset,
+    trigger,
+    getFieldState,
     formState: { errors, isSubmitting },
-  } = useForm<Lead>({ resolver: zodResolver(leadSchema), defaultValues: { service: defaultService ?? "" }, mode: "onTouched" });
+  } = useForm<Lead>({ resolver: zodResolver(leadSchemaChecked), defaultValues: { service: defaultService ?? "", callType: "", previousSpend: [], firstTime: false }, mode: "onTouched" });
 
   useEffect(() => setValue("startedAt", String(Date.now())), [setValue]);
+
+  const syncSpend = (nextSpend: Record<string, string>, nextFirst: boolean) => {
+    setSpend(nextSpend);
+    setFirstTime(nextFirst);
+    setValue(
+      "previousSpend",
+      formOptions.pastServices.filter((n) => n in nextSpend).map((service) => ({ service, amount: nextSpend[service] === "" ? NaN : Number(nextSpend[service]) })),
+    );
+    setValue("firstTime", nextFirst);
+    if (getFieldState("previousSpend").isTouched || getFieldState("previousSpend").error) void trigger("previousSpend");
+  };
+  const toggleService = (name: string, on: boolean) => {
+    const next = { ...spend };
+    if (on) next[name] = next[name] ?? "";
+    else delete next[name];
+    syncSpend(next, on ? false : firstTime);
+  };
+  const total = Object.values(spend).reduce((t, v) => t + (Number(v) || 0), 0);
 
   const onSubmit = async (data: Lead) => {
     setServerError("");
@@ -33,6 +59,8 @@ export function ContactForm({ defaultService, compact }: { defaultService?: stri
       if (!res.ok) throw new Error(json.error || "Something went wrong. Please try again.");
       setStatus("success");
       reset();
+      setSpend({});
+      setFirstTime(false);
     } catch (e) {
       setStatus("error");
       setServerError(e instanceof Error ? e.message : "Something went wrong.");
@@ -97,9 +125,74 @@ export function ContactForm({ defaultService, compact }: { defaultService?: stri
         {input("email", "Email", "email", "email")}
         {select("businessType", "Business type", formOptions.businessTypes)}
         {select("service", "Service needed", formOptions.services)}
-        <div className={cn(!compact && "sm:col-span-2")}>
-          {select("budget", "Monthly budget range", formOptions.budgets)}
-        </div>
+        {select("callType", "Preferred call type", formOptions.callTypes)}
+        <fieldset className={cn("min-w-0", !compact && "sm:col-span-2")} aria-describedby={id("spend-help")}>
+          <legend className="mb-1 block text-sm font-semibold">
+            What have you paid for before? <span aria-hidden className="text-slate">*</span>
+          </legend>
+          <p id={id("spend-help")} className="mb-3 text-xs text-slate">
+            Tick each service you already spent money on, then add roughly how much (₹). Approximate is fine; enter 0 if you don’t remember.
+          </p>
+          <ul className="space-y-2">
+            {formOptions.pastServices.map((name, i) => {
+              const on = name in spend;
+              const amountErr = errors.previousSpend?.[formOptions.pastServices.filter((n) => n in spend).indexOf(name)]?.amount?.message;
+              const aid = id(`amount-${i}`);
+              return (
+                <li key={`${i}-${name}`} className={cn("rounded-lg border-2 border-ink bg-white", on && "bg-lemon/40")}>
+                  <label className="flex min-h-[44px] cursor-pointer items-center gap-3 px-3 py-2 text-[15px] font-medium">
+                    <input type="checkbox" name="used" value={name} checked={on} onChange={(e) => toggleService(name, e.target.checked)} className="h-5 w-5 shrink-0 accent-ink" />
+                    {name}
+                  </label>
+                  {on && (
+                    <div className="px-3 pb-3">
+                      <label htmlFor={aid} className="mb-1 block text-xs font-semibold text-slate">
+                        Amount spent on {name} (₹)
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <span aria-hidden className="font-display text-lg font-bold">₹</span>
+                        <input
+                          id={aid}
+                          name={`amount:${name}`}
+                          inputMode="numeric"
+                          autoComplete="off"
+                          enterKeyHint="next"
+                          placeholder="e.g. 25,000"
+                          value={money(spend[name] ?? "")}
+                          onChange={(e) => syncSpend({ ...spend, [name]: digits(e.target.value) }, false)}
+                          aria-invalid={amountErr ? true : undefined}
+                          aria-describedby={amountErr ? `${aid}-err` : undefined}
+                          className="field"
+                        />
+                      </div>
+                      {amountErr && (
+                        <p id={`${aid}-err`} className="mt-1.5 text-sm font-medium text-red-700">
+                          {amountErr}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+            <li className={cn("rounded-lg border-2 border-ink bg-white", firstTime && "bg-mint/40")}>
+              <label className="flex min-h-[44px] cursor-pointer items-center gap-3 px-3 py-2 text-[15px] font-medium">
+                <input type="checkbox" name="firstTime" checked={firstTime} onChange={(e) => syncSpend(e.target.checked ? {} : spend, e.target.checked)} className="h-5 w-5 shrink-0 accent-ink" />
+                This is my first time — I haven’t paid for these before
+              </label>
+            </li>
+          </ul>
+          {Object.keys(spend).length > 0 && (
+            <p className="mt-3 text-sm font-semibold" aria-live="polite">
+              Total spent so far: ₹{total.toLocaleString("en-IN")}
+            </p>
+          )}
+          {(errors.previousSpend?.message || errors.previousSpend?.root?.message) && (
+            <p role="alert" className="mt-1.5 text-sm font-medium text-red-700">
+              {errors.previousSpend?.message ?? errors.previousSpend?.root?.message}
+            </p>
+          )}
+        </fieldset>
       </div>
       <div>
         {label("message", "Message")}

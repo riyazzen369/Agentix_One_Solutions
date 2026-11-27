@@ -224,7 +224,9 @@ export const testimonials = Array.from({ length: 3 }, () => ({
 export const formOptions = {
   businessTypes: ["Local business / Retail", "Clinic / Healthcare", "Real estate", "Education / Coaching", "E-commerce / D2C", "Agency / Consulting", "SaaS / Startup", "Manufacturing / B2B", "Other"],
   services: services.map((s) => s.title).concat("Not sure yet"),
-  budgets: ["Under ₹10,000", "₹10,000 – ₹25,000", "₹25,000 – ₹50,000", "₹50,000 – ₹1,00,000", "Above ₹1,00,000", "Not sure yet"],
+  callTypes: ["Phone call", "WhatsApp call", "Video call"],
+  /** Services a visitor may already have paid for elsewhere (no "Not sure yet"). */
+  pastServices: services.map((s) => s.title),
 };
 
 export type Faq = { q: string; a: string };
