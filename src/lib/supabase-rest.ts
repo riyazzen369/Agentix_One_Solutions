@@ -10,6 +10,7 @@ type Opts = {
   body?: unknown;
   headers?: Record<string, string>;
   next?: { revalidate?: number | false; tags?: string[] };
+  timeoutMs?: number; // never let a slow or paused database hold a page or API request hostage
 };
 
 export async function sb(path: string, o: Opts = {}) {
@@ -20,6 +21,7 @@ export async function sb(path: string, o: Opts = {}) {
     method: o.method ?? "GET",
     headers,
     body: o.body !== undefined ? JSON.stringify(o.body) : undefined,
+    signal: AbortSignal.timeout(o.timeoutMs ?? 6000),
     ...(o.next ? { next: o.next } : { cache: "no-store" as const }),
   });
 }

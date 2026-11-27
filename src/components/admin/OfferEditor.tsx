@@ -8,6 +8,8 @@ export function OfferEditor({ initial }: { initial: Offer }) {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
   const [error, setError] = useState("");
+  const today = new Date(Date.now() + 5.5 * 3600 * 1000).toISOString().slice(0, 10);
+  const expired = !!o.endsOn && o.endsOn < today;
   const set = <K extends keyof Offer>(k: K, v: Offer[K]) => setO((x) => ({ ...x, [k]: v }));
 
   async function save(e: React.FormEvent) {
@@ -50,6 +52,7 @@ export function OfferEditor({ initial }: { initial: Offer }) {
         <label htmlFor="offer-ends" className="mb-1.5 block text-sm font-semibold">Ends on (optional)</label>
         <input id="offer-ends" type="date" className="field max-w-xs" value={o.endsOn} onChange={(e) => set("endsOn", e.target.value)} />
         <p className="mt-1 text-xs text-slate">The banner hides itself after this date (India time).</p>
+        {expired && o.enabled && <p role="alert" className="mt-2 rounded-lg border-2 border-ink bg-lemon p-2 text-sm font-semibold">This date has already passed, so the banner will stay hidden. Choose a later date or clear it.</p>}
       </div>
       {o.text && (
         <div>

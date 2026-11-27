@@ -24,6 +24,7 @@ export type Signoff = z.infer<typeof signoffSchema>;
 
 // 10 digits -> +91XXXXXXXXXX; 11–15 digits are treated as already including a country code.
 export function normalizePhone(input: string) {
-  const d = input.replace(/\D/g, "");
+  let d = input.replace(/\D/g, "");
+  if (d.length === 11 && d.startsWith("0")) d = d.slice(1); // 098765 43210: the leading 0 is the national dialling prefix
   return d.length === 10 ? `+91${d}` : `+${d}`;
 }

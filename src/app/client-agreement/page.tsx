@@ -67,8 +67,8 @@ export default function ClientAgreementPage() {
                   <div><dt className="text-sm text-slate">Signed by</dt><dd className="font-semibold">{s.who}</dd></div>
                 </dl>
                 <ul className="mt-5 flex-1 space-y-2 border-t-2 border-ink pt-4 text-[15px]">
-                  {s.confirms.map((c) => (
-                    <li key={c} className="flex gap-2.5"><Check aria-hidden className="mt-0.5 h-5 w-5 shrink-0 rounded border-2 border-ink bg-mint p-0.5" strokeWidth={3} />{c}</li>
+                  {s.confirms.map((c, i) => (
+                    <li key={`${i}-${c}`} className="flex gap-2.5"><Check aria-hidden className="mt-0.5 h-5 w-5 shrink-0 rounded border-2 border-ink bg-mint p-0.5" strokeWidth={3} />{c}</li>
                   ))}
                 </ul>
                 <div className="mt-6 grid grid-cols-2 gap-3 text-xs text-slate">
@@ -117,8 +117,8 @@ export default function ClientAgreementPage() {
               </button>
               <p className="mt-2 font-semibold text-ink/90 sm:pl-10">{c.summary}</p>
               <div className="mt-3 space-y-2 text-[15px] text-ink/80 sm:pl-10">
-                {c.p?.map((t) => <p key={t}>{t}</p>)}
-                {c.list && <ul className="list-disc space-y-1.5 pl-5 marker:text-ink">{c.list.map((t) => <li key={t}>{t}</li>)}</ul>}
+                {c.p?.map((t, i) => <p key={`${i}-${t}`}>{t}</p>)}
+                {c.list && <ul className="list-disc space-y-1.5 pl-5 marker:text-ink">{c.list.map((t, i) => <li key={`${i}-${t}`}>{t}</li>)}</ul>}
               </div>
             </li>
           ))}
@@ -133,7 +133,7 @@ export default function ClientAgreementPage() {
             ].map((b) => (
               <div key={b.h}>
                 <p className="eyebrow flex items-center gap-2"><FileSignature aria-hidden className="h-4 w-4" />{b.h}</p>
-                <ul className="mt-3 space-y-2 text-[15px]">{b.rows.map((r) => <li key={r}>{r}</li>)}</ul>
+                <ul className="mt-3 space-y-2 text-[15px]">{b.rows.map((r, i) => <li key={`${i}-${r}`}>{r}</li>)}</ul>
               </div>
             ))}
           </div>
@@ -165,8 +165,8 @@ export default function ClientAgreementPage() {
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <SectionHeading id="billing" eyebrow="Billing" title="Transparent invoices" text="Every payment is backed by a proper invoice linked to your signed SOW." />
           <ul className="card grid gap-3 p-6 sm:p-8">
-            {invoiceIncludes.map((x) => (
-              <li key={x} className="flex gap-3"><Receipt aria-hidden className="mt-0.5 h-5 w-5 shrink-0" />{x}</li>
+            {invoiceIncludes.map((x, i) => (
+              <li key={`${i}-${x}`} className="flex gap-3"><Receipt aria-hidden className="mt-0.5 h-5 w-5 shrink-0" />{x}</li>
             ))}
           </ul>
         </div>

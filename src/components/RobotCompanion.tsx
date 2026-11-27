@@ -31,6 +31,7 @@ function vibrate(pattern: number | number[]) {
 export function useRobotCompanion() {
   const runId = useRef(0);
   const taps = useRef(0);
+  const active = useRef(false); // set synchronously, so a double tap in one frame cannot start two scenes
   const shakeTimer = useRef<number | undefined>(undefined);
   const tapButton = useRef<HTMLButtonElement>(null);
   const [scene, setScene] = useState(0);
@@ -49,6 +50,7 @@ export function useRobotCompanion() {
 
   const close = useCallback(() => {
     runId.current += 1;
+    active.current = false;
     vibrate(0);
     window.clearTimeout(shakeTimer.current);
     setShake("");
@@ -120,13 +122,14 @@ export function useRobotCompanion() {
 
   const onTap = useCallback(() => {
     setTapped(true);
-    if (phase !== "idle") { doShake("anim-shake", 450); return; } // a scene is still showing
+    if (active.current) { doShake("anim-shake", 450); return; } // a scene is still showing
     const n = ((taps.current % 3) + 1) as 1 | 2 | 3;
     taps.current += 1;
+    active.current = true;
     void run(n);
-  }, [phase, run, doShake]);
+  }, [run, doShake]);
 
-  const apologize = useCallback(() => void run(4), [run]);
+  const apologize = useCallback(() => { active.current = true; void run(4); }, [run]);
 
   return { scene, phase, text, done, shake, tapped, tapButton, onTap, close, apologize };
 }

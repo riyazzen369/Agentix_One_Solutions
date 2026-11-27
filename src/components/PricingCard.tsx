@@ -19,8 +19,8 @@ export function PricingCard({ plan, service }: { plan: Plan; service?: string })
       {plan.reference && <p className="mt-2 text-sm text-slate">{plan.reference}</p>}
       <p className="mt-3 text-xs font-medium text-slate">{PRICE_NOTE}</p>
       <ul className="mt-6 flex-1 space-y-2.5 border-t-2 border-ink pt-6">
-        {plan.features.map((f) => (
-          <li key={f} className="flex gap-2.5 text-[15px]">
+        {plan.features.map((f, i) => (
+          <li key={`${i}-${f}`} className="flex gap-2.5 text-[15px]">
             <Check aria-hidden className="mt-0.5 h-5 w-5 shrink-0 rounded border-2 border-ink bg-mint p-0.5" strokeWidth={3} />
             {f}
           </li>

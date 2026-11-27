@@ -10,12 +10,21 @@ export const RT = "agx_rt";
 
 type Tokens = { access_token: string; refresh_token: string; expires_in: number };
 
-export async function passwordLogin(email: string, password: string): Promise<Tokens | null> {
+export type LoginResult = { tokens: Tokens } | { error: "invalid" | "unavailable" };
+
+export async function passwordLogin(email: string, password: string): Promise<LoginResult> {
   const res = await sb("/auth/v1/token?grant_type=password", { method: "POST", body: { email, password } }).catch(() => null);
-  if (!res?.ok) return null;
+  if (!res || res.status >= 500) return { error: "unavailable" }; // network problem, or the Supabase project is paused
+  if (!res.ok) return { error: "invalid" };
   const j = (await res.json()) as Tokens & { user?: { email?: string } };
-  if (!j.access_token || j.user?.email?.toLowerCase() !== ADMIN_EMAIL) return null;
-  return j;
+  if (!j.access_token || j.user?.email?.toLowerCase() !== ADMIN_EMAIL) return { error: "invalid" };
+  return { tokens: j };
+}
+
+/** Best effort: ends the session at Supabase so a copied refresh token stops working. */
+export async function revokeSession(token: string | undefined) {
+  if (!token) return;
+  await sb("/auth/v1/logout", { method: "POST", token, timeoutMs: 3000 }).catch(() => null);
 }
 
 export async function refreshTokens(refreshToken: string): Promise<Tokens | null> {

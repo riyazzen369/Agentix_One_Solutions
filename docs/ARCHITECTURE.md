@@ -135,6 +135,8 @@ Private page for the owner. Three tabs: **Pricing**, **Offers**, **Signed agreem
 - **Pricing tab:** every price on the site has a stable id (`lib/pricing-overrides.ts`: website plans and estimates, app, chatbot / automation / retainer tables, Services and AI Automations page "starting price" lines). Saved values override the defaults in `src/content/*`; only values that differ from the defaults are stored, and the reset arrow restores a default. Edit features, plan descriptions and policy text in the code files (`src/content/pricing.ts`).
 - **Offers tab:** one site-wide banner (`components/OfferBanner.tsx`, rendered in `layout.tsx`) with message, optional button (relative link or https URL only) and optional end date (India time). It hides itself after the end date.
 - **Signed agreements tab:** latest 1,000 records, plus **Download CSV** (`/api/admin/signoffs-csv`, all records, Excel-friendly with BOM, times in IST, formula-safe). Columns: Reference, Signed at (IST), Name, WhatsApp, Business address or place, four acceptance columns, Signature method, Agreement version, Agreement hash.
+- **Validation:** price fields cannot be empty; the offer needs a message when enabled, a button text and link together (or neither), a real calendar date, and a link that is a page on this site (`/…`, not `//…`) or `https://`. The editor warns when the end date has already passed.
+- **Sign-out / outages:** sign-out also revokes the session at Supabase. A Supabase outage shows "The sign-in service is not reachable right now" instead of "wrong password".
 - **How changes reach the site:** content is read from Supabase with a 60-second cache; saving in the admin also clears the cache immediately for Home, Pricing, Services and AI Automations. If Supabase is unreachable the site falls back to the defaults in code.
 - **One-time setup:** create the admin user in Supabase (Authentication → Users → Add user, tick *Auto Confirm User*) and turn off *Allow new users to sign up*. See `docs/DEPLOYMENT.md`.
 
@@ -148,6 +150,9 @@ Measured with Lighthouse (mobile, simulated slow 4G, production build): Performa
 - `content-visibility: auto` on below-the-fold sections and long cards (`.page-enter > section`, `.cv-auto` in `globals.css`) skips layout and paint until they are near the viewport.
 - Compositor-only animations (transform/opacity) for the pulsing flow nodes; no `backdrop-filter` on the header.
 - Admin-edited prices are cached for 60 s and refreshed instantly on save.
+- Database calls never hang a page: every Supabase / Resend request has a timeout (`src/lib/supabase-rest.ts`, 6 s default; 2.5 s for cached content reads), and the site falls back to code defaults. Note: free Supabase projects pause after a week of inactivity — restore the project in the Supabase dashboard if the admin page or sign-off form stops saving.
+- `content-visibility` uses `contain-intrinsic-block-size` only (a single-value `contain-intrinsic-size` also fixes the *width* and made grid cards overflow on phones).
+- Error pages: `src/app/error.tsx` and `src/app/global-error.tsx` show a friendly retry screen instead of a blank page.
 
 Re-test after big changes: `npm run build`, start with `npm start`, then `npx lighthouse http://localhost:3000 --only-categories=performance`.
 

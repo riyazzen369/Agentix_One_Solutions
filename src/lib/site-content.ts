@@ -5,22 +5,22 @@ import type { Overrides } from "./pricing-overrides";
 
 export const CONTENT_TAG = "site-content";
 
-export const offerSchema = z.object({
-  enabled: z.boolean(),
-  text: z.string().trim().max(160),
-  ctaLabel: z.string().trim().max(30).optional().default(""),
-  ctaHref: z
-    .string()
-    .trim()
-    .max(200)
-    .refine((v) => v === "" || v.startsWith("/") || /^https:\/\//.test(v), "Link must start with / or https://")
-    .optional()
-    .default(""),
-  endsOn: z.string().trim().regex(/^(\d{4}-\d{2}-\d{2})?$/, "Use a date like 2026-12-31").optional().default(""),
-});
+const realDate = (v: string) => v === "" || (!Number.isNaN(Date.parse(`${v}T00:00:00Z`)) && new Date(`${v}T00:00:00Z`).toISOString().startsWith(v));
+const safeLink = (v: string) => v === "" || (v.startsWith("/") && !v.startsWith("//")) || /^https:\/\/[^\s]+$/.test(v);
+
+export const offerSchema = z
+  .object({
+    enabled: z.boolean(),
+    text: z.string().trim().max(160, "The offer message is too long (160 characters at most)"),
+    ctaLabel: z.string().trim().max(30, "Button text is too long (30 characters at most)").optional().default(""),
+    ctaHref: z.string().trim().max(200, "The link is too long").refine(safeLink, "The link must start with / (a page on this site) or https://").optional().default(""),
+    endsOn: z.string().trim().regex(/^(\d{4}-\d{2}-\d{2})?$/, "Use a date like 2026-12-31").refine(realDate, "That date does not exist").optional().default(""),
+  })
+  .refine((o) => !o.enabled || o.text.length > 0, { message: "Type the offer message first, or untick the banner", path: ["text"] })
+  .refine((o) => (o.ctaLabel === "") === (o.ctaHref === ""), { message: "Add both a button text and a link, or leave both empty", path: ["ctaHref"] });
 export type Offer = z.infer<typeof offerSchema>;
 
-export const pricingSchema = z.record(z.string().max(80), z.string().trim().min(1).max(120));
+export const pricingSchema = z.record(z.string().max(80), z.string().trim().min(1, "A price cannot be empty").max(120, "A price is too long (120 characters at most)"));
 
 export type SiteContent = { pricing: Overrides; offer: Offer | null };
 const EMPTY: SiteContent = { pricing: {}, offer: null };
@@ -28,7 +28,7 @@ const EMPTY: SiteContent = { pricing: {}, offer: null };
 export async function getContent(fresh = false): Promise<SiteContent> {
   if (!sbConfigured()) return EMPTY;
   try {
-    const res = await sb("/rest/v1/site_content?select=key,value", fresh ? {} : { next: { revalidate: 60, tags: [CONTENT_TAG] } });
+    const res = await sb("/rest/v1/site_content?select=key,value", fresh ? {} : { next: { revalidate: 60, tags: [CONTENT_TAG] }, timeoutMs: 2500 });
     if (!res.ok) return EMPTY;
     const rows = (await res.json()) as { key: string; value: unknown }[];
     const out: SiteContent = { pricing: {}, offer: null };

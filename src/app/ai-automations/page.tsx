@@ -47,7 +47,7 @@ export default async function AutomationsPage() {
             </ol>
             <h3 className="eyebrow mt-6">Tools that may be used</h3>
             <ul className="mt-3 flex flex-wrap gap-2">
-              {a.tools.map((t) => <li key={t} className="rounded-full border-2 border-ink px-3 py-1 text-sm">{t}</li>)}
+              {a.tools.map((t, i) => <li key={`${i}-${t}`} className="rounded-full border-2 border-ink px-3 py-1 text-sm">{t}</li>)}
             </ul>
             <p className="mt-6 flex-1 rounded-lg bg-mint/25 p-3 text-[15px]"><strong>Expected outcome:</strong> {a.outcome}</p>
             <p className="mt-3 text-xs text-slate">{PRICE_NOTE} Outcomes are not guaranteed and depend on your data, offer and usage.</p>

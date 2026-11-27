@@ -16,7 +16,7 @@ import { applyAppPlan, applyTables, applyWebsitePlans } from "@/lib/pricing-over
 
 export const metadata: Metadata = pageMeta({
   title: "Pricing — Websites, AI Chatbots & Automation Plans",
-  description: "Website plans from ₹6,000, apps from ₹19,599, AI chatbots from ₹7,349, workflow automation from ₹3,919 and monthly AI retainers. GST extra.",
+  description: "Transparent starting prices for website plans, apps, AI chatbots, workflow automation and monthly AI retainers. GST extra.",
   path: "/pricing",
 });
 
@@ -37,7 +37,7 @@ export default async function PricingPage() {
         <div data-reveal className="mt-10 rounded-brut border-2 border-ink bg-alabaster p-5 shadow-brut-sm sm:p-6">
           <h3 className="font-display text-lg font-bold">Separately billable &amp; renewals</h3>
           <ul className="mt-3 list-disc space-y-1 pl-5 text-[15px] marker:text-ink">
-            {websiteBillable.map((b) => <li key={b}>{b}</li>)}
+            {websiteBillable.map((b, i) => <li key={`${i}-${b}`}>{b}</li>)}
           </ul>
         </div>
       </section>
@@ -91,7 +91,7 @@ export default async function PricingPage() {
         <div data-reveal className="rounded-brut border-2 border-ink bg-ink p-6 text-lemon sm:p-10">
           <h2 id="notes" className="flex items-center gap-3 text-3xl uppercase"><Info aria-hidden className="h-7 w-7" /> Pricing notes</h2>
           <ul className="mt-6 grid gap-3 md:grid-cols-2">
-            {pricingNotes.map((n) => <li key={n} className="flex gap-3"><span aria-hidden className="mt-2 h-2 w-2 shrink-0 rounded-full bg-mint" />{n}</li>)}
+            {pricingNotes.map((n, i) => <li key={`${i}-${n}`} className="flex gap-3"><span aria-hidden className="mt-2 h-2 w-2 shrink-0 rounded-full bg-mint" />{n}</li>)}
           </ul>
         </div>
       </section>

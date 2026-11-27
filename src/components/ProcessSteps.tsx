@@ -11,7 +11,7 @@ export function ProcessSteps({ className, detailed }: { className?: string; deta
           <p className="mt-2 text-[15px] text-ink/75">{s.text}</p>
           {detailed && (
             <ul className="mt-4 space-y-1.5 border-t-2 border-ink pt-4 text-sm">
-              {s.detail.map((d) => <li key={d} className="flex gap-2"><span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />{d}</li>)}
+              {s.detail.map((d, i) => <li key={`${i}-${d}`} className="flex gap-2"><span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />{d}</li>)}
             </ul>
           )}
         </li>

@@ -16,10 +16,10 @@ export function LegalPageLayout({ title, intro, sections, path }: Props) {
           {sections.map((s) => (
             <section key={s.h} className="mt-8">
               <h2 className="text-2xl normal-case">{s.h}</h2>
-              {s.p?.map((p) => <p key={p} className="mt-3 text-ink/85">{p}</p>)}
+              {s.p?.map((p, i) => <p key={`${i}-${p}`} className="mt-3 text-ink/85">{p}</p>)}
               {s.list && (
                 <ul className="mt-3 list-disc space-y-1.5 pl-5 text-ink/85 marker:text-ink">
-                  {s.list.map((l) => <li key={l}>{l}</li>)}
+                  {s.list.map((l, i) => <li key={`${i}-${l}`}>{l}</li>)}
                 </ul>
               )}
             </section>

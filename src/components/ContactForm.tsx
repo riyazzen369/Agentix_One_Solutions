@@ -73,8 +73,8 @@ export function ContactForm({ defaultService, compact }: { defaultService?: stri
       {label(name, text)}
       <select className="field appearance-auto" {...fieldProps(name)}>
         <option value="">Select…</option>
-        {options.map((o) => (
-          <option key={o}>{o}</option>
+        {options.map((o, i) => (
+          <option key={`${i}-${o}`}>{o}</option>
         ))}
       </select>
       {err(name)}

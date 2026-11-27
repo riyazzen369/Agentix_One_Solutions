@@ -100,6 +100,7 @@ Vercel builds each push (typically 1–3 minutes; builds may wait in a queue on 
 | Pages show `example.com` URLs | `NEXT_PUBLIC_SITE_URL` not set; set it and redeploy. |
 | Contact / WhatsApp details show `[PLACEHOLDER]` | `NEXT_PUBLIC_CONTACT_EMAIL` / `NEXT_PUBLIC_WHATSAPP_NUMBER` not set; set and redeploy. |
 | Form shows "couldn't send your request" | Resend variables missing or the sender domain is not verified. |
+| Admin page or sign-off form stops saving | Free Supabase projects pause when inactive. Open the Supabase dashboard and restore the project. |
 | `npm run build` fails locally on TypeScript | Keep TypeScript on major 5 (TS 6 breaks the Next 15 build). |
 
 ## Verification checklist after each deploy

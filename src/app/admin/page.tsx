@@ -70,7 +70,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                 <table className="w-full min-w-[760px] border-collapse text-left text-[14px]">
                   <caption className="sr-only">Signed agreements, newest first</caption>
                   <thead className="bg-ink text-lemon">
-                    <tr>{["Reference", "Signed (IST)", "Name", "WhatsApp", "Business address or place", "Accepted", "Version"].map((h) => <th key={h} scope="col" className="px-3 py-3 font-display text-xs uppercase tracking-wide">{h}</th>)}</tr>
+                    <tr>{["Reference", "Signed (IST)", "Name", "WhatsApp", "Business address or place", "Accepted", "Version"].map((h, i) => <th key={`${i}-${h}`} scope="col" className="px-3 py-3 font-display text-xs uppercase tracking-wide">{h}</th>)}</tr>
                   </thead>
                   <tbody>
                     {rows.map((r, i) => (

@@ -48,8 +48,8 @@ export default async function ServicesPage() {
             <div className="flex flex-col rounded-xl border-2 border-ink bg-white p-6">
               <h3 className="eyebrow">What’s included</h3>
               <ul className="mt-4 space-y-2.5">
-                {s.included.map((x) => (
-                  <li key={x} className="flex gap-2.5"><Check aria-hidden className="mt-0.5 h-5 w-5 shrink-0 rounded border-2 border-ink bg-mint p-0.5" strokeWidth={3} />{x}</li>
+                {s.included.map((x, i) => (
+                  <li key={`${i}-${x}`} className="flex gap-2.5"><Check aria-hidden className="mt-0.5 h-5 w-5 shrink-0 rounded border-2 border-ink bg-mint p-0.5" strokeWidth={3} />{x}</li>
                 ))}
               </ul>
               <dl className="mt-6 grid gap-4 border-t-2 border-ink pt-5 sm:grid-cols-2">

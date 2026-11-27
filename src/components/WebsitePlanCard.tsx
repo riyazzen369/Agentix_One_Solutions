@@ -18,8 +18,8 @@ export function WebsitePlanCard({ plan }: { plan: WebsitePlan }) {
 
       <h4 className="eyebrow mt-6 border-t-2 border-ink pt-5">Features &amp; inclusions</h4>
       <ul className="mt-3 space-y-2.5">
-        {plan.features.map((f) => (
-          <li key={f} className="flex gap-2.5 text-[15px]">
+        {plan.features.map((f, i) => (
+          <li key={`${i}-${f}`} className="flex gap-2.5 text-[15px]">
             <Check aria-hidden className="mt-0.5 h-5 w-5 shrink-0 rounded border-2 border-ink bg-mint p-0.5" strokeWidth={3} />
             {f}
           </li>

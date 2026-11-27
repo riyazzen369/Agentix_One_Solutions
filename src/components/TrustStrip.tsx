@@ -18,8 +18,8 @@ export function TrustStrip() {
           <div>
             <p className="font-display text-2xl font-bold uppercase leading-tight">Every project is backed by a signed agreement</p>
             <ul className="mt-3 flex flex-col gap-x-5 gap-y-1.5 text-[15px] sm:flex-row sm:flex-wrap">
-              {points.map((p) => (
-                <li key={p} className="flex items-center gap-2"><span aria-hidden className="h-2 w-2 rounded-full border border-ink bg-mint" />{p}</li>
+              {points.map((p, i) => (
+                <li key={`${i}-${p}`} className="flex items-center gap-2"><span aria-hidden className="h-2 w-2 rounded-full border border-ink bg-mint" />{p}</li>
               ))}
             </ul>
           </div>

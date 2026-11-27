@@ -33,6 +33,7 @@ async function saveToSupabase(r: SignRecord): Promise<boolean> {
   try {
     const res = await fetch(`${url.replace(/\/$/, "")}/rest/v1/client_signoffs`, {
       method: "POST",
+      signal: AbortSignal.timeout(8000),
       headers: { apikey: key, "Content-Type": "application/json", Prefer: "return=minimal" },
       body: JSON.stringify({
         ref: r.ref,
@@ -75,6 +76,7 @@ async function emailOwner(r: SignRecord): Promise<boolean> {
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
+      signal: AbortSignal.timeout(8000),
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         from,

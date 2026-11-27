@@ -47,14 +47,14 @@ export default function ClientSignOffPage() {
               </summary>
               <div className="space-y-6 border-t-2 border-ink p-5 sm:p-6">
                 <div className="space-y-2 rounded-lg bg-lemon/50 p-4 text-[15px]">
-                  {d.preamble.map((t) => <p key={t}>{t}</p>)}
+                  {d.preamble.map((t, i) => <p key={`${i}-${t}`}>{t}</p>)}
                 </div>
                 {d.sections.map((s) => (
                   <section key={s.h}>
                     <h3 className="text-lg normal-case">{s.h}</h3>
-                    {s.p?.map((t) => <p key={t} className="mt-2 text-[15px] text-ink/85">{t}</p>)}
-                    {s.list && <ul className="mt-2 list-disc space-y-1.5 pl-5 text-[15px] text-ink/85 marker:text-ink">{s.list.map((t) => <li key={t}>{t}</li>)}</ul>}
-                    {s.after?.map((t) => <p key={t} className="mt-2 text-[15px] text-ink/85">{t}</p>)}
+                    {s.p?.map((t, i) => <p key={`${i}-${t}`} className="mt-2 text-[15px] text-ink/85">{t}</p>)}
+                    {s.list && <ul className="mt-2 list-disc space-y-1.5 pl-5 text-[15px] text-ink/85 marker:text-ink">{s.list.map((t, i) => <li key={`${i}-${t}`}>{t}</li>)}</ul>}
+                    {s.after?.map((t, i) => <p key={`${i}-${t}`} className="mt-2 text-[15px] text-ink/85">{t}</p>)}
                   </section>
                 ))}
               </div>

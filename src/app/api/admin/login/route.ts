@@ -30,10 +30,12 @@ export async function POST(req: NextRequest) {
 
   // Same message for a wrong email and a wrong password.
   if (parsed.data.email.toLowerCase() !== ADMIN_EMAIL) return fail("Wrong email or password.");
-  const tokens = await passwordLogin(parsed.data.email, parsed.data.password);
-  if (!tokens) return fail("Wrong email or password.");
+  const result = await passwordLogin(parsed.data.email, parsed.data.password);
+  if ("error" in result) {
+    return result.error === "unavailable" ? fail("The sign-in service is not reachable right now. Please try again in a minute.", 503) : fail("Wrong email or password.");
+  }
 
   const res = NextResponse.json({ ok: true });
-  setSession(res, tokens);
+  setSession(res, result.tokens);
   return res;
 }

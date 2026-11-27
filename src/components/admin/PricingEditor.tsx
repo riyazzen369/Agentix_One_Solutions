@@ -31,8 +31,8 @@ export function PricingEditor({ items, initial }: { items: Item[]; initial: Reco
   return (
     <form onSubmit={save} noValidate>
       <p className="mb-6 text-[15px] text-ink/80">Type prices exactly as visitors should see them, for example <code className="rounded bg-lemon px-1">₹9,999</code> or <code className="rounded bg-lemon px-1">₹12,249 setup + ₹4,899/month</code>. Use the reset arrow to go back to the original price. GST and third-party costs are explained in the pricing notes on the site.</p>
-      {groups.map((g) => (
-        <fieldset key={g} className="mb-6 rounded-brut border-2 border-ink bg-white p-4 sm:p-5">
+      {groups.map((g, i) => (
+        <fieldset key={`${i}-${g}`} className="mb-6 rounded-brut border-2 border-ink bg-white p-4 sm:p-5">
           <legend className="px-2 font-display text-lg font-bold">{g}</legend>
           <div className="space-y-3">
             {items.filter((i) => i.group === g).map((i) => {
